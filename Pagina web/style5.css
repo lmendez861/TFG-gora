@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    font-family: PT Serif, Helvetica Now;
+    background-color: #2c2f33;
+    color: #fff;
+}
+
+.header {
+    background-color: #7289da;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.header ul li {
+    display: inline;
+}
+
+.header ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    transition: color 0.3s ease;
+}
+
+.header ul li a:hover {
+    color: #FFB152;
+}
+
+.header ul li a i {
+    margin-right: 8px;
+}
+
+.menu {
+    width: 20%;
+    background-color: #2f3136;
+    padding: 15px;
+    box-sizing: border-box;
+    position: fixed;
+    height: 100vh;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li {
+    margin-bottom: 15px;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: #9b84e0;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    background-color: #3a3f44;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.menu ul li a:hover {
+    background-color: #5b6eae;
+}
+
+.content {
+    margin-left: 20%;
+    padding: 20px;
+    background-color: #36393f;
+    min-height: 100vh;
+}
+
+.content h2 {
+    color: #7289da;
+    border-bottom: 2px solid #7289da;
+    padding-bottom: 10px;
+}
+
+.content p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.highlight {
+    color: #ffb152;
+    font-weight: bold;
+}
+/* Estilos para el enlace del icono de casa */
+.header ul li a {
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: #fff; /* Color del texto blanco */
+    font-size: 1.5rem; /* Tamaño del texto */
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+.header ul li a:hover {
+    color: #FFB152; /* Color del texto al pasar el ratón */
+}
+
+.header ul li a i {
+    margin-right: 8px; /* Espacio entre el icono y el texto */
+}
+
+/* Estilos para el icono */
+.header ul li a i.fas.fa-home {
+    font-size: 1.5rem; /* Tamaño del icono */
+    color: inherit; /* Hereda el color del enlace */
+}
+
+.header {
+    background-color: #7289da; /* Color de fondo azul */
+    color: #FFFFFF; /* Color del texto blanco */
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.header ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+

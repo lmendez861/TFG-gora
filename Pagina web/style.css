@@ -1,0 +1,198 @@
+body {
+    font-family: PT Serif, Helvetica Now;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    color: #003366;
+}
+
+header {
+    background-color: #FFB152;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #003366;
+
+}
+
+.top-nav li {
+    display: inline;
+    margin: 0 10px;
+}
+
+
+.top-nav li a {
+    text-decoration: none;
+    color: #003366;
+}
+
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border: 2px solid #003366;
+}
+
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+    color: #003366;
+}
+
+main {
+    flex-grow: 1;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    text-align: center; /* Asegura que el contenido dentro del contenedor esté centrado */
+}
+
+.hero img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    border: 10px solid #003366;
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+}
+
+
+.platforms h2 {
+    margin-top: 40px;
+    color: #003366;
+
+}
+
+.platform-icons img {
+    width: 60px;
+    margin: 10px;
+
+}
+
+footer {
+    background-color: #FFB152;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.footer-sections {
+    display: flex;
+    justify-content: space-around;
+}
+
+.download-btn {
+    margin-top: 20px;
+    padding: 15px 30px;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: flex-start; /* Alinea los íconos a la izquierda */
+    align-items: center;
+    margin-top: 10px; /* Espacio superior opcional */
+}
+
+.social-icon {
+    width: 24px; /* Tamaño pequeño para los íconos */
+    height: 24px;
+    margin-right: 10px; /* Espacio entre los íconos */
+    border-radius: 50%; /* Hace que el fondo sea circular */
+    padding: 5px; /* Espacio interno alrededor del ícono */
+}
+
+.menu-toggle {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #003366;
+    margin-right: 5px; /* Reduce el margen derecho */
+}
+
+.sidebar {
+    width: 200px;
+    transition: width 0.3s ease;
+}
+
+.sidebar.hidden {
+    width: 0;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+}
+
+.container {
+    display: flex;
+    transition: margin-left 0.3s ease;
+}
+
+.container.full {
+    margin-left: 0;
+}
+
+main {
+    flex-grow: 1;
+}
+
+.container {
+    position: relative;
+}
+
+#userMenu {
+    position: absolute;
+    right: 0; /* Alinea el menú a la izquierda */
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    margin-top: 5px;
+    list-style-type: none;
+    min-width: 160px;
+    max-width: 100%; /* Asegura que el menú no sobresalga del contenedor */
+    z-index: 1;
+    overflow: hidden; /* Evita que el contenido sobresalga */
+}
+
+#userMenu li {
+    padding: 8px;
+}
+
+#userMenu li a {
+    text-decoration: none;
+    color: #333;
+    display: block; /* Asegura que el enlace ocupe todo el espacio del li */
+}
+
+#userMenu li a:hover {
+    background-color: #f1f1f1;
+}

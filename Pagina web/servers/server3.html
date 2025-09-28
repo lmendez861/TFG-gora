@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Chats</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Servidores -->
+
+        <div class="servers-panel">
+            <ul>
+                <li><a href="server1.html"><img src="imagenes/server1.jpg" alt="Server 1" class="server-img"></a></li>
+                <li><a href="server2.html"><img src="imagenes/server2.jpg" alt="Server 2" class="server-img"></a></li>
+                <li><a href="server3.html"><img src="imagenes/server3.jpg" alt="Server 3" class="server-img"></a></li>
+                <li><a href="server4.html"><img src="imagenes/server4.jpg" alt="Server 4" class="server-img"></a></li>
+                <li><a href="server5.html"><img src="imagenes/server5.jpg" alt="Server 5" class="server-img"></a></li>
+                <li><a href="server6.html"><img src="imagenes/server6.jpg" alt="Server 6" class="server-img"></a></li>
+            </ul>
+            <div class="server" title="Añadir Servidor">+</div>
+            <div class="server" title="Añadir Amigos">
+                <i class="fas fa-user-plus"></i>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar canales..." class="search-input" id="searchInput">
+            <i class="fas fa-search search-icon"></i>
+        <!-- Canales -->
+        <div class="channels-panel">
+            <ul id="channelList">
+                <li><a href="../Chats.html"><img src="imagenes/user1.png" alt="User 1" class="server-img">Ana <i class="fa-solid fa-2 fa-beat-fade"></i></a></li>
+                <li><a href="../Chats/Maria.html"><img src="imagenes/user2.jpg" alt="User 2" class="server-img">Maria </a></li>
+                <li><a href="../chats/Juana.html"><img src="imagenes/user3.png" alt="User 2" class="server-img">Juana <i class="fa-solid fa-3 fa-beat-fade"></i></a></li>
+                <li><a href="../chats/Ster.html"><img src="imagenes/user4.png" alt="User 2" class="server-img">Ster </a></li>
+                <li><a href="../chats/Jose.html"><img src="imagenes/user5.png" alt="User 2" class="server-img">Jose </a></li>
+                <li><a href="../chats/Yisus.html"><img src="imagenes/user6.png" alt="User 2" class="server-img">Yisus </a></li>
+                <!-- Más canales -->
+            </ul>
+        </div>
+        <script>
+            document.getElementById('searchInput').addEventListener('keyup', function() {
+                var input = document.getElementById('searchInput');
+                var filter = input.value.toLowerCase();
+                var ul = document.getElementById('channelList');
+                var li = ul.getElementsByTagName('li');
+            
+                for (var i = 0; i < li.length; i++) {
+                    var a = li[i].getElementsByTagName('a')[0];
+                    var txtValue = a.textContent || a.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+            });
+            </script>
+        </div>
+    
+        <!-- Chat Principal -->
+        <div class="chat-window">
+            <div class="chat-header">
+                <h2>Creative  Collective</h2>
+                <ul>
+                    <li><a href="#" onclick="openCallModal('phone')"><i class="fas fa-phone"></i></a></li>
+                    <li><a href="#" onclick="openCallModal('video')"><i class="fas fa-video"></i></a></li>
+                </ul>
+            </div>
+          
+
+            <div class="messages">
+                <div class="message received">[Ana] Oigan, ¿quién viene al torneo de videojuegos?</div>
+                <div class="message sent"> ¡Yo voy! ¿Dónde va a ser?</div>
+                <div class="message received">[Ana] Creo que en el centro comunitario, ¿verdad?</div>
+                <div class="message received">[María] Sí, pero hay que llegar temprano. Se llena rápido. 🎮</div>
+                <div class="message received">[Yisus] Perfecto, llevo mis controles extra por si alguien los necesita. 😊</div>
+                <div class="message sent"> ¡Eres un crack, Yisus! Nos vemos allá. 🙌</div>
+            </div>
+            <div class="chat-input">
+                <textarea placeholder="Escribe un mensaje..."></textarea>
+                <button>Enviar</button>
+            </div>
+        </div>
+        <!-- Modal de llamada -->
+    <div id="callModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCallModal()">&times;</span>
+            <iframe id="callFrame" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openCallModal(type) {
+            var modal = document.getElementById("callModal");
+            var iframe = document.getElementById("callFrame");
+            iframe.src = 'call.html?type=' + type;
+            modal.style.display = "block";
+        }
+
+        function closeCallModal() {
+            var modal = document.getElementById("callModal");
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("callModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    
+        <!-- Información del Usuario/Servidor -->
+        <div class="info-panel">
+            <h3>Información</h3>
+            <ul>
+                <!--poner servidores y amigos en comun-->
+                <li><img src="imagenes/user1.png" alt="Ana">Ana</li>
+                <li><img src="imagenes/user5.png" alt="Jose">Jose</li>
+                <li><img src="imagenes/user6.png" alt="Yisus">Yisus</li>
+                <li><img src="imagenes/user2.jpg" alt="Juana">Juana</li>
+                
+            </ul>
+        </div>
+    
+       <!-- Botones de Notificaciones, Ajustes y Desconectar -->
+       <div class="bottom-buttons">
+        <button><i class="fas fa-bell"></i></button>
+        <button><i class="fas fa-cog"></i></button>
+        <a href="../index.html" class="disconnect-link">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+        <button id="userStatusButton"><i class="fas fa-user"></i></button> <!-- Icono de usuario -->
+        <div id="statusMenu" class="status-menu">
+            <ul>
+                <li onclick="setStatus('available')">Disponible</li>
+                <li onclick="setStatus('absent')">Ausente</li>
+                <li onclick="setStatus('busy')">Ocupado</li>
+            </ul>
+        </div>
+        <span id="statusIcon" class="status-icon"></span>
+    </div>
+</div>
+<script src="../MenuUser.js"></script>
+</body>
+</html>

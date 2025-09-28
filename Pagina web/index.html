@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ágora - Inicio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="logo">Ágora</div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <nav>
+                <ul class="top-nav">
+                    <li><a href="#">Descubrir</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Soporte Técnico</a></li>
+                    <li><a href="#"id="downloadButton">Descargar</a></li>
+                    <li><a href="movil.html" class="button-link">Agora en tu Móvil</a></li>                    
+                    <li><a href="Chats.html">Abrir Ágora</a></li>
+                    <li><a href="registro.html">Registrarse</a></li>
+                    <li><a href="iniciosesion.html">Iniciar sesión</a></li>
+
+                    <!-- Menú desplegable de usuario -->
+                    <li id="userIcon" style="display: none;">
+                        <a href="#" onclick="toggleUserMenu()">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <ul id="userMenu" style="display: none;">
+                            <li><a href="#">Perfil</a></li>
+                            <li><a href="#" onclick="cerrarSesion()"><i class="fa-solid fa-sign-out-alt"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <script>
+        // Mostrar icono de usuario si hay sesión iniciada
+        window.onload = function() {
+            if (localStorage.getItem('usuarioRegistrado') === 'true') {
+                document.getElementById('userIcon').style.display = 'inline-block';
+            }
+        };
+
+        // Función para mostrar/ocultar el menú de usuario
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('usuarioRegistrado');
+            document.getElementById('userIcon').style.display = 'none'; // Ocultar el icono de usuario
+            alert('Has cerrado sesión con éxito');
+            // Redirigir a la página de inicio de sesión
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <script>
+        // Mostrar el mensaje de agradecimiento al descargar
+        document.getElementById('downloadButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Evita que el enlace realice su acción por defecto
+            alert('Gracias por descargar Agora y por confiar en nosotros');
+        });
+    </script>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="Tecnica.html">Producto</a></li>
+                <li><a href="Tecnica.html">Compañia</a></li>
+                <li><a href="Tecnica.html">Política</a></li>
+                <li><a href="Tecnica.html">Servicios</a></li>
+            </ul>
+        </aside>
+        <script src="Menu.js"></script>
+        <main>
+            <section class="hero">
+                <h6>.</h6>
+                <img src="imagenes/banner.png" alt="Ágora banner">
+            </section>
+            
+            <section class="platforms">
+                <h2>Disponible en</h2>
+                <div class="platform-icons">
+                    <a href="https://www.xbox.com" target="_blank">
+                        <img src="imagenes/xbox.png" alt="Xbox">
+                    </a>
+                    <a href="https://www.playstation.com" target="_blank">
+                        <img src="imagenes/playstation.png" alt="PlayStation">
+                    </a>
+                    <a href="https://www.microsoft.com/windows" target="_blank">
+                        <img src="imagenes/windows.png" alt="Microsoft">
+                    </a>
+                    <a href="https://www.apple.com/ios" target="_blank">
+                        <img src="imagenes/ios.png" alt="iOS">
+                    </a>
+                    <a href="https://www.android.com/intl/es_es/" target="_blank">
+                        <img src="imagenes/android.png" alt="Android">
+
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-sections">
+            <div>
+                <h3>Caracteristicas</h3>
+                <p><a href="SobreNosotros.html">Diseño</a></p>
+                <p><a href="SobreNosotros.html">Prototipo</a></p>
+                <p><a href="SobreNosotros.html">Colaboracion</a></p> 
+            </div>
+            <div>
+                <h3>Comunidad</h3>
+                <p><a href="SobreNosotros.html">Foros de discursion</a></p>
+                <p><a href="SobreNosotros.html">Eventos de la comunidad</a></p>
+                <p><a href="SobreNosotros.html">Historias</a></p>
+            </div>
+            <div>
+                <h3>Equipo</h3>
+                <p><a href="SobreNosotros.html">Nuestro equipo</a></p>
+                <p><a href="SobreNosotros.html">Unete a Nosotros</a></p>
+                <p><a href="SobreNosotros.html">Cultura y valores</a></p>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://www.tiktok.com" target="_blank">
+                <img src="imagenes/tiktok.png" alt="TikTok" class="social-icon">
+            </a>
+            <a href="https://www.instagram.com" target="_blank">
+                <img src="imagenes/instagram.png" alt="Instagram" class="social-icon">
+            </a>
+            <a href="https://www.youtube.com" target="_blank">
+                <img src="imagenes/youtube.png" alt="YouTube" class="social-icon">
+            </a>
+            <a href="https://www.facebook.com" target="_blank">
+                <img src="imagenes/facebook.png" alt="Facebook" class="social-icon">
+            </a>
+        </div>
+        <button class="download-btn">Descargar</button>
+    </footer>
+</body>
+</html>

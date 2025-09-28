@@ -1,0 +1,284 @@
+/* Variables de color */
+:root {
+  --primary: #000000;
+  --secondary: #1a2a4f;
+  --background: #f8a03e;
+  --text: #333;
+  --text-light: #fff;
+  --muted: #aaa;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Cabecera */
+.header {
+  background-color: var(--secondary);
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-light);
+}
+
+.logo {
+  max-width: 250px; /* Ajusta el tamaño máximo del logo */
+  height: auto;
+}
+
+.add-server {
+  background-color: var(--primary);
+  color: var(--text-light);
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-server:hover {
+  background-color: #333; /* Cambia a un gris más oscuro en hover */
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 100%; /* La imagen ocupará el 100% del ancho disponible */
+    height: 100%; /* La imagen ocupará el 100% del alto disponible */
+    max-width: 100%;
+    object-fit: cover; /* Esto asegura que la imagen se recorte correctamente para llenar el espacio */
+  }
+  
+
+  .add-server {
+    width: 100%;
+  }
+}
+
+/* Contenedor Principal */
+.main-container {
+  display: flex;
+  flex: 1;
+}
+
+/* Barra lateral de servidores */
+.server-bar {
+  width: 70px;
+  background-color: var(--secondary);
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.server-icon img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.server-icon img:hover {
+  transform: scale(1.1);
+}
+
+/* Contenido principal */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+}
+
+/* Explorar */
+.explorar {
+  background-color: var(--text-light);
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.explorar h2 {
+  margin-bottom: 15px;
+}
+
+.explorar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.explorar-item {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Conversaciones */
+.conversaciones {
+  flex: 1;
+  padding: 15px;
+  background-color: var(--background);
+}
+
+.conv-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--muted);
+  margin-right: 10px;
+}
+
+.add-friend {
+  background-color: var(--primary);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: var(--text-light);
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.conversation h3 {
+  margin: 0;
+  color: var(--text);
+}
+
+.conversation p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.time {
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Pie de navegación */
+.nav-bar {
+  background-color: var(--secondary);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.nav-item {
+  color: var(--text-light);
+  text-align: center;
+  text-decoration: none;
+}
+
+.nav-item i {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+/* Servidores destacados */
+.servidores-destacados {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.serv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.serv-header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.server {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.server-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.server h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.server p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
+}

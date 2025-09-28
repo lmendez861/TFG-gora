@@ -1,0 +1,399 @@
+/* Variables de color */
+:root {
+  --primary: #000000;
+  --secondary: #1a2a4f;
+  --background: #f8a03e;
+  --text: #333;
+  --text-light: #fff;
+  --muted: #aaa;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Cabecera */
+.header {
+  background-color: var(--secondary);
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-light);
+}
+
+.logo {
+  max-width: 250px; /* Ajusta el tamaño máximo del logo */
+  height: auto;
+}
+
+.add-server {
+  background-color: var(--primary);
+  color: var(--text-light);
+  padding: 5px 10px;  /* Reduce el padding para hacerlo más pequeño */
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;  /* Tamaño de fuente más pequeño */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-server:hover {
+  background-color: #333; /* Cambia a un gris más oscuro en hover */
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 100%; /* La imagen ocupará el 100% del ancho disponible */
+    height: 100%; /* La imagen ocupará el 100% del alto disponible */
+    max-width: 100%;
+    object-fit: cover; /* Esto asegura que la imagen se recorte correctamente para llenar el espacio */
+  }
+
+  .add-server {
+    width: 100%;
+  }
+}
+
+/* Contenedor Principal */
+.main-container {
+  display: flex;
+  flex: 1;
+}
+
+/* Barra lateral de servidores */
+.server-bar {
+  width: 70px;
+  background-color: var(--secondary);
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.server-icon img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.server-icon img:hover {
+  transform: scale(1.1);
+}
+
+/* Contenido principal */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+}
+
+/* Explorar */
+.explorar {
+  background-color: var(--text-light);
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px; /* Agrega un poco de espacio entre la sección */
+}
+
+.explorar h2 {
+  margin-bottom: 15px;
+  font-size: 20px; /* Tamaño de fuente más pequeño para pantallas pequeñas */
+}
+
+/* Contenedor para el deslizamiento horizontal */
+.explorar-scroll {
+  overflow-x: auto; /* Permite el deslizamiento horizontal */
+  display: flex;
+  gap: 15px;
+  scroll-behavior: smooth; /* Suaviza el deslizamiento */
+  padding: 10px 0;
+}
+
+.explorar-item {
+  width: 120px; /* Imagen más pequeña */
+  height: 120px; /* Altura de las imágenes */
+  object-fit: cover; /* Asegura que la imagen no se distorsione */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.explorar-item:hover {
+  transform: scale(1.1); /* Efecto de hover más suave */
+}
+
+/* Para pantallas más pequeñas */
+@media (max-width: 1080px) {
+  .explorar-scroll {
+    gap: 10px;
+  }
+
+  .explorar-item {
+    width: 100px; /* Reducción aún más pequeña de las imágenes */
+    height: 100px;
+  }
+
+  .explorar h2 {
+    font-size: 18px; /* Reduce el tamaño del título */
+  }
+}
+
+/* Para dispositivos aún más pequeños (ej. Samsung A34 5G) */
+@media (max-width: 768px) {
+  .explorar-scroll {
+    gap: 8px;
+  }
+
+  .explorar-item {
+    width: 90px; /* Reducción adicional de las imágenes */
+    height: 90px;
+  }
+
+  .explorar h2 {
+    font-size: 16px; /* Reduce el tamaño del título */
+  }
+}
+
+/* Conversaciones */
+.conversaciones {
+  flex: 1;
+  padding: 15px;
+  background-color: var(--background);
+}
+
+.conv-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--muted);
+  margin-right: 10px;
+}
+
+.add-friend {
+  background-color: var(--primary);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: var(--text-light);
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.conversation h3 {
+  margin: 0;
+  color: var(--text);
+}
+
+.conversation p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.time {
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Pie de navegación */
+.nav-bar {
+  background-color: var(--secondary);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.nav-item {
+  color: var(--text-light);
+  text-align: center;
+  text-decoration: none;
+}
+
+.nav-item i {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+/* Servidores destacados */
+.servidores-destacados {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.serv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.serv-header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.server {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.server-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.server h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.server p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Ajustes adicionales para pantallas pequeñas */
+@media (max-width: 768px) {
+  .server-bar {
+    width: 50px;
+  }
+
+  .server-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  .explorar {
+    padding: 10px;
+  }
+
+  .conversation {
+    padding: 8px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .conversation h3 {
+    font-size: 16px;
+  }
+
+  .conversation p {
+    font-size: 14px;
+  }
+
+  .time {
+    font-size: 10px;
+  }
+
+  .nav-bar {
+    padding: 8px 0;
+  }
+
+  .nav-item i {
+    font-size: 18px;
+  }
+
+  .servidores-destacados {
+    padding: 15px;
+  }
+
+  .serv-header h2 {
+    font-size: 20px;
+  }
+
+  .server {
+    padding: 8px;
+  }
+
+  .server-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .server h3 {
+    font-size: 16px;
+  }
+
+  .server p {
+    font-size: 12px;
+  }
+}

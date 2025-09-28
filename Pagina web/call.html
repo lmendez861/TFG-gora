@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Llamada</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #7289da, #5865f2); /* Fondo degradado */
+            color: white;
+        }
+        .call-container {
+            text-align: center;
+        }
+        .call-container i {
+            font-size: 64px;
+            color: #FFB152;
+            animation: bounce 1.5s infinite;
+        }
+        .call-container p {
+            font-size: 20px;
+            margin-top: 15px;
+        }
+        .cancel-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .cancel-button:hover {
+            background-color: #ff1a1a;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="call-container">
+        <i class="fa-solid fa-phone fa-bounce"></i>        
+        <p>Haciendo una llamada...</p>
+        <button class="cancel-button" onclick="cancelCall()">Cancelar llamada</button>
+    </div>
+    <script>
+        function cancelCall() {
+            alert("Llamada cancelada");
+            // Aquí podrías redirigir o cerrar la ventana
+            // Por ejemplo: window.close();
+        }
+    </script>
+</body>
+</html>
