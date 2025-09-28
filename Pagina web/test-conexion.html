@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Conexión - Ágora</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .user-info { background: #2c3e50; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .groups-container { margin-top: 20px; }
+        .group { background: #ecf0f1; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #3498db; }
+        .group h4 { margin: 0 0 10px 0; color: #2c3e50; }
+        .group p { margin: 0; color: #7f8c8d; }
+        .button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #2980b9; }
+        .error { background: #e74c3c; color: white; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #27ae60; color: white; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .loading { text-align: center; padding: 20px; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Conexión Frontend ↔ Backend</h1>
+        
+        <!-- Información del usuario -->
+        <div id="userInfo" class="user-info" style="display: none;">
+            <h3>👤 Usuario Logueado</h3>
+            <div id="userDetails"></div>
+            <button class="button" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <!-- Login rápido -->
+        <div id="loginSection">
+            <h3>🔐 Login Rápido</h3>
+            <div style="margin-bottom: 15px;">
+                <label>Usuario:</label>
+                <select id="quickUser" style="margin-left: 10px; padding: 5px;">
+                    <option value="">Seleccionar...</option>
+                    <option value="admin">admin (Administrador)</option>
+                    <option value="moderador">moderador (Moderador)</option>
+                    <option value="luis">luis (Usuario)</option>
+                    <option value="maria">maria (Usuario)</option>
+                </select>
+                <button class="button" onclick="quickLogin()">Login Rápido</button>
+            </div>
+        </div>
+
+        <!-- Test de API -->
+        <div>
+            <h3>🔗 Test de API</h3>
+            <button class="button" onclick="testLogin()">Test Login</button>
+            <button class="button" onclick="loadGroups()">Cargar Grupos</button>
+            <button class="button" onclick="testCreateGroup()">Crear Grupo Test</button>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="messages"></div>
+
+        <!-- Grupos -->
+        <div id="groupsContainer" class="groups-container" style="display: none;">
+            <h3>📝 Grupos Disponibles</h3>
+            <div id="groupsList"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            AgoraAPI.initializeAuth();
+            updateUI();
+        });
+
+        function updateUI() {
+            const userInfo = document.getElementById('userInfo');
+            const userDetails = document.getElementById('userDetails');
+            const loginSection = document.getElementById('loginSection');
+            
+            if (currentUser) {
+                userDetails.innerHTML = `
+                    <strong>Nombre:</strong> ${currentUser.nombre}<br>
+                    <strong>Username:</strong> @${currentUser.username}<br>
+                    <strong>Email:</strong> ${currentUser.email}<br>
+                    <strong>Rol:</strong> ${currentUser.rol}
+                `;
+                userInfo.style.display = 'block';
+                loginSection.style.display = 'none';
+            } else {
+                userInfo.style.display = 'none';
+                loginSection.style.display = 'block';
+            }
+        }
+
+        async function quickLogin() {
+            const username = document.getElementById('quickUser').value;
+            if (!username) {
+                showMessage('Selecciona un usuario', 'error');
+                return;
+            }
+
+            const passwords = {
+                'admin': 'admin123',
+                'moderador': 'mod123',
+                'luis': '123456',
+                'maria': '123456'
+            };
+
+            try {
+                showMessage('Iniciando sesión...', 'loading');
+                const result = await AgoraAPI.login(username, passwords[username]);
+                
+                if (result.success) {
+                    showMessage(`✅ Login exitoso para ${result.user.nombre}`, 'success');
+                    updateUI();
+                } else {
+                    showMessage(`❌ Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            try {
+                showMessage('Probando login con admin...', 'loading');
+                const result = await AgoraAPI.login('admin', 'admin123');
+                
+                if (result.success) {
+                    showMessage('✅ Test de login exitoso', 'success');
+                    updateUI();
+                } else {
+                    showMessage(`❌ Test falló: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadGroups() {
+            try {
+                showMessage('Cargando grupos...', 'loading');
+                const groups = await AgoraAPI.getGroups();
+                
+                if (groups.length > 0) {
+                    showMessage(`✅ Se cargaron ${groups.length} grupos`, 'success');
+                    displayGroups(groups);
+                } else {
+                    showMessage('⚠️ No se encontraron grupos', 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error cargando grupos: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreateGroup() {
+            if (!currentUser) {
+                showMessage('❌ Debes estar logueado para crear grupos', 'error');
+                return;
+            }
+
+            try {
+                showMessage('Creando grupo de prueba...', 'loading');
+                const result = await AgoraAPI.createGroup({
+                    nombre: `Test Group ${Date.now()}`,
+                    descripcion: 'Grupo creado desde el test de frontend',
+                    privado: false
+                });
+                
+                if (result.success) {
+                    showMessage('✅ Grupo creado exitosamente', 'success');
+                    loadGroups(); // Recargar grupos
+                } else {
+                    showMessage(`❌ Error creando grupo: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayGroups(groups) {
+            const container = document.getElementById('groupsContainer');
+            const list = document.getElementById('groupsList');
+            
+            list.innerHTML = '';
+            
+            groups.forEach(group => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group';
+                groupDiv.innerHTML = `
+                    <h4>${group.nombre} ${group.privado ? '🔒' : '🌐'}</h4>
+                    <p><strong>Descripción:</strong> ${group.descripcion || 'Sin descripción'}</p>
+                    <p><strong>Creado por:</strong> ${group.creado_por}</p>
+                    <p><strong>Miembros:</strong> ${group.miembros_count}</p>
+                    <p><strong>Creado:</strong> ${new Date(group.creado_at).toLocaleString('es-ES')}</p>
+                `;
+                list.appendChild(groupDiv);
+            });
+            
+            container.style.display = 'block';
+        }
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            
+            if (type === 'loading') {
+                messageDiv.className = 'loading';
+                messageDiv.innerHTML = `⏳ ${message}`;
+            } else {
+                messageDiv.className = type;
+                messageDiv.textContent = message;
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        function logout() {
+            AgoraAPI.logout();
+            showMessage('✅ Sesión cerrada', 'success');
+            updateUI();
+            document.getElementById('groupsContainer').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -12,6 +12,12 @@
 </head>
 <body>
     <div class="container">
+        <!-- Información del usuario logueado -->
+        <div id="userWelcome" style="background: #2c3e50; color: white; padding: 10px; margin-bottom: 10px; text-align: center; display: none;">
+            <span id="welcomeMessage"></span>
+            <button onclick="logout()" style="float: right; background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Cerrar Sesión</button>
+        </div>
+        
         <!-- Servidores -->
         <div class="servers-panel">
             <ul>
@@ -137,6 +143,37 @@
             <span id="statusIcon" class="status-icon"></span>
         </div>
     </div>
+    
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
     <script src="MenuUser.js"></script>
+    <script>
+        // Verificar si el usuario está logueado al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            AgoraAPI.initializeAuth();
+            
+            if (currentUser) {
+                // Mostrar información del usuario
+                const welcomeDiv = document.getElementById('userWelcome');
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                
+                welcomeMessage.textContent = `¡Bienvenido ${currentUser.nombre} (@${currentUser.username})! Rol: ${currentUser.rol}`;
+                welcomeDiv.style.display = 'block';
+                
+                console.log('Usuario logueado:', currentUser);
+            } else {
+                // Si no está logueado, redirigir al login
+                alert('Debes iniciar sesión para acceder a los chats');
+                window.location.href = 'iniciosesion.html';
+            }
+        });
+        
+        // Función para cerrar sesión
+        function logout() {
+            AgoraAPI.logout();
+            alert('Sesión cerrada');
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
