@@ -23,26 +23,40 @@ class AgoraAPI {
     // Autenticación
     static async login(username, password) {
         try {
+            console.log('🔐 Intentando login con:', username);
+            console.log('📡 URL de API:', `${API_BASE_URL}/auth/login`);
+            
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: this.getHeaders(false),
                 body: JSON.stringify({ username, password })
             });
             
+            console.log('📡 Respuesta del servidor - Status:', response.status);
+            console.log('📡 Respuesta del servidor - OK:', response.ok);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('📡 Datos recibidos:', data);
             
             if (data.success) {
                 authToken = data.token;
                 currentUser = data.user;
-                localStorage.setItem('agora_token', authToken);
-                localStorage.setItem('agora_user', JSON.stringify(currentUser));
+                localStorage.setItem('agoraToken', authToken);
+                localStorage.setItem('agoraUser', JSON.stringify(currentUser));
+                console.log('✅ Login exitoso para:', currentUser.username);
                 return { success: true, user: currentUser };
             } else {
+                console.log('❌ Login falló:', data.error);
                 return { success: false, error: data.error };
             }
         } catch (error) {
-            console.error('Error en login:', error);
-            return { success: false, error: 'Error de conexión' };
+            console.error('💥 Error en login:', error);
+            console.error('💥 Error stack:', error.stack);
+            return { success: false, error: `Error de conexión: ${error.message}` };
         }
     }
 
@@ -65,15 +79,48 @@ class AgoraAPI {
     static logout() {
         authToken = null;
         currentUser = null;
-        localStorage.removeItem('agora_token');
-        localStorage.removeItem('agora_user');
+        localStorage.removeItem('agoraToken');
+        localStorage.removeItem('agoraUser');
     }
 
     static initializeAuth() {
-        authToken = localStorage.getItem('agora_token');
-        const userData = localStorage.getItem('agora_user');
+        authToken = localStorage.getItem('agoraToken');
+        const userData = localStorage.getItem('agoraUser');
         if (userData) {
             currentUser = JSON.parse(userData);
+        }
+    }
+
+    // Verificar token
+    static async verifyToken() {
+        try {
+            if (!authToken) {
+                return { valid: false, error: 'No hay token' };
+            }
+            
+            console.log('🔍 Verificando token...');
+            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+                method: 'POST',
+                headers: this.getHeaders(true)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Token verificado:', data);
+            
+            if (data.valid) {
+                currentUser = data.user;
+                localStorage.setItem('agoraUser', JSON.stringify(currentUser));
+            }
+            
+            return data;
+        } catch (error) {
+            console.error('💥 Error verificando token:', error);
+            this.logout();
+            return { valid: false, error: error.message };
         }
     }
 

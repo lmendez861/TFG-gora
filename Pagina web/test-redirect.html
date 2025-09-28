@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Redirección - Ágora</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .btn { padding: 10px 20px; margin: 10px; background: #3498db; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        .btn:hover { background: #2980b9; }
+        .debug { background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; border-radius: 5px; margin: 10px 0; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Test de Sistema de Redirección</h1>
+    
+    <div class="debug">
+        <h3>Información Actual:</h3>
+        <p><strong>URL:</strong> <span id="currentUrl"></span></p>
+        <p><strong>Parámetros:</strong> <span id="urlParams"></span></p>
+        <p><strong>Token en localStorage:</strong> <span id="tokenStatus"></span></p>
+    </div>
+
+    <h3>Botones de Prueba:</h3>
+    <button class="btn" onclick="testLogin()">🔐 Test: Ir a Login (como desde index)</button>
+    <button class="btn" onclick="testLoginForChats()">🚀 Test: Ir a Login (directo a chats)</button>
+    <button class="btn" onclick="testDirectChats()">💬 Test: Ir directo a Chats</button>
+    <button class="btn" onclick="clearStorage()">🗑️ Limpiar Storage</button>
+
+    <div class="debug">
+        <h3>Console Log:</h3>
+        <pre id="logOutput"></pre>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Función para mostrar logs en la página
+        let originalLog = console.log;
+        let logMessages = [];
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logMessages.push(args.join(' '));
+            document.getElementById('logOutput').textContent = logMessages.slice(-10).join('\n');
+        };
+
+        // Actualizar información
+        function updateInfo() {
+            document.getElementById('currentUrl').textContent = window.location.href;
+            document.getElementById('urlParams').textContent = window.location.search || 'ninguno';
+            document.getElementById('tokenStatus').textContent = localStorage.getItem('agoraToken') ? 'SÍ' : 'NO';
+        }
+
+        // Test functions
+        function testLogin() {
+            console.log('🔐 Redirigiendo a login para volver aquí...');
+            window.location.href = 'iniciosesion.html?redirect=test';
+        }
+
+        function testLoginForChats() {
+            console.log('🚀 Redirigiendo a login para ir a chats...');
+            window.location.href = 'iniciosesion.html?redirect=chats';
+        }
+
+        function testDirectChats() {
+            console.log('💬 Intentando ir directo a chats...');
+            window.location.href = 'Chats.html';
+        }
+
+        function clearStorage() {
+            console.log('🗑️ Limpiando localStorage...');
+            localStorage.removeItem('agoraToken');
+            localStorage.removeItem('agoraUser');
+            updateInfo();
+        }
+
+        // Inicializar
+        updateInfo();
+        console.log('✅ Test page loaded');
+    </script>
+</body>
+</html>

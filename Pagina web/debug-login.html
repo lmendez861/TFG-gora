@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login - Ágora</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .log {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .credentials {
+            background: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐛 Debug Login - Proyecto Ágora</h1>
+        
+        <div class="credentials">
+            <strong>📋 Credenciales correctas:</strong><br>
+            • admin / admin123<br>
+            • moderador / mod123<br>
+            • luis / 123456<br>
+            • maria / 123456
+        </div>
+
+        <div class="form-group">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" value="admin" placeholder="Ingresa el usuario">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" value="admin123" placeholder="Ingresa la contraseña">
+        </div>
+
+        <button onclick="testLogin()">🔐 Test Login</button>
+        <button onclick="testAPI()">🧪 Test API Directo</button>
+        <button onclick="clearLog()">🗑️ Limpiar Log</button>
+
+        <div id="result"></div>
+
+        <h3>📝 Log de Debugging:</h3>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Override console.log para mostrar en nuestra página
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToLog(message, type = 'log') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#e74c3c' : '#3498db';
+            logDiv.innerHTML += `<div style="color: ${color}; margin-bottom: 5px;">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLog(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLog('ERROR: ' + args.join(' '), 'error');
+        };
+
+        // Test de login usando nuestra API
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            console.log('=== INICIANDO TEST DE LOGIN ===');
+            console.log('Usuario:', username);
+            console.log('Contraseña: [OCULTA]');
+
+            try {
+                const result = await AgoraAPI.login(username, password);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ LOGIN EXITOSO<br>
+                            Usuario: ${result.user.username}<br>
+                            Nombre: ${result.user.nombre}<br>
+                            Rol: ${result.user.rol}
+                        </div>
+                    `;
+                    console.log('✅ Test completado exitosamente');
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ LOGIN FALLÓ<br>
+                            Error: ${result.error}
+                        </div>
+                    `;
+                    console.log('❌ Test falló:', result.error);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        💥 EXCEPCIÓN<br>
+                        Error: ${error.message}
+                    </div>
+                `;
+                console.error('💥 Excepción durante el test:', error);
+            }
+        }
+
+        // Test directo de la API sin usar AgoraAPI
+        async function testAPI() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            console.log('=== INICIANDO TEST DIRECTO DE API ===');
+
+            try {
+                console.log('📡 Haciendo fetch a: http://127.0.0.1:8000/api/auth/login');
+                
+                const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response ok:', response.ok);
+                console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+
+                const data = await response.json();
+                console.log('📡 Response data:', data);
+
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ API DIRECTA EXITOSA<br>
+                            Usuario: ${data.user.username}<br>
+                            Token: ${data.token.substring(0, 20)}...
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ API DIRECTA FALLÓ<br>
+                            Status: ${response.status}<br>
+                            Error: ${data.error || 'Error desconocido'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        💥 ERROR DE CONEXIÓN<br>
+                        Error: ${error.message}
+                    </div>
+                `;
+                console.error('💥 Error en test directo:', error);
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('result').innerHTML = '';
+        }
+
+        // Mensaje inicial
+        console.log('🐛 Debug page cargada');
+        console.log('🔗 API Base URL:', 'http://127.0.0.1:8000/api');
+    </script>
+</body>
+</html>

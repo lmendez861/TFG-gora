@@ -34,6 +34,14 @@
 
     <script src="js/api.js"></script>
     <script>
+        // Debug: Verificar si AgoraAPI está disponible
+        if (typeof AgoraAPI === 'undefined') {
+            console.error('❌ AgoraAPI no está disponible. Problema con la carga de js/api.js');
+            alert('Error: No se pudo cargar el archivo de conexión. Verifica que js/api.js esté disponible.');
+        } else {
+            console.log('✅ AgoraAPI cargado correctamente');
+        }
+        
         document.getElementById('loginForm').onsubmit = async function(event) {
             event.preventDefault();
             
@@ -43,18 +51,50 @@
 
             if (username && password) {
                 try {
+                    console.log('🔐 Intentando login desde iniciosesion.html');
+                    console.log('👤 Usuario:', username);
+                    console.log('🔗 API URL:', 'http://127.0.0.1:8000/api');
+                    
+                    // Verificar si AgoraAPI existe
+                    if (typeof AgoraAPI === 'undefined') {
+                        throw new Error('AgoraAPI no está disponible');
+                    }
+                    
                     // Usar la API para hacer login
                     const result = await AgoraAPI.login(username, password);
                     
+                    console.log('📡 Resultado del login:', result);
+                    
                     if (result.success) {
-                        alert(`¡Bienvenido ${result.user.nombre}! Redirigiendo a la página principal...`);
-                        window.location.href = 'Chats.html';
+                        // Detectar de dónde viene el usuario
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirectTo = urlParams.get('redirect') || 'index';
+                        
+                        console.log('🔍 URL completa:', window.location.href);
+                        console.log('🔍 Parámetros URL:', window.location.search);
+                        console.log('🔍 Redirect parameter:', redirectTo);
+                        
+                        if (redirectTo === 'chats') {
+                            console.log('✅ Redirigiendo a Chats.html');
+                            alert(`¡Bienvenido ${result.user.nombre}! Accediendo a Ágora...`);
+                            window.location.href = 'Chats.html';
+                        } else if (redirectTo === 'test') {
+                            console.log('✅ Redirigiendo a test-redirect.html');
+                            alert(`¡Bienvenido ${result.user.nombre}! Regresando a test...`);
+                            window.location.href = 'test-redirect.html';
+                        } else {
+                            console.log('✅ Redirigiendo a index.html');
+                            alert(`¡Bienvenido ${result.user.nombre}! Regresando al inicio...`);
+                            window.location.href = 'index.html';
+                        }
                     } else {
+                        console.error('❌ Login falló:', result.error);
                         errorDiv.textContent = result.error;
                         errorDiv.style.display = 'block';
                     }
                 } catch (error) {
-                    errorDiv.textContent = 'Error de conexión. Verifica que el servidor esté funcionando.';
+                    console.error('💥 Error en login:', error);
+                    errorDiv.textContent = `Error de conexión: ${error.message}. Verifica que el servidor esté funcionando.`;
                     errorDiv.style.display = 'block';
                 }
             } else {

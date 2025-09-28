@@ -19,9 +19,9 @@
                     <li><a href="#">Soporte Técnico</a></li>
                     <li><a href="#"id="downloadButton">Descargar</a></li>
                     <li><a href="movil.html" class="button-link">Agora en tu Móvil</a></li>                    
-                    <li><a href="Chats.html">Abrir Ágora</a></li>
+                    <li><a href="#" onclick="abrirAgora()">Abrir Ágora</a></li>
                     <li><a href="registro.html">Registrarse</a></li>
-                    <li><a href="iniciosesion.html">Iniciar sesión</a></li>
+                    <li><a href="#" onclick="irALogin()">Iniciar sesión</a></li>
 
                     <!-- Menú desplegable de usuario -->
                     <li id="userIcon" style="display: none;">
@@ -151,5 +151,77 @@
     <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="Menu.js"></script>
+    
+    <script>
+        // Función para manejar "Abrir Ágora"
+        async function abrirAgora() {
+            console.log('🚀 Intentando abrir Ágora...');
+            
+            // Verificar si hay una sesión activa
+            const token = localStorage.getItem('agoraToken');
+            console.log('🔍 Token encontrado:', token ? 'SÍ' : 'NO');
+            
+            if (!token) {
+                console.log('❌ No hay sesión activa, redirigiendo a login...');
+                const loginUrl = 'iniciosesion.html?redirect=chats';
+                console.log('🔗 URL de login:', loginUrl);
+                window.location.href = loginUrl;
+                return;
+            }
+            
+            try {
+                // Verificar si el token es válido
+                if (typeof AgoraAPI !== 'undefined') {
+                    console.log('🔍 Verificando token...');
+                    const isValid = await AgoraAPI.verifyToken();
+                    console.log('🔍 Token válido:', isValid);
+                    if (isValid.valid) {
+                        console.log('✅ Sesión válida, accediendo a chats...');
+                        window.location.href = 'Chats.html';
+                    } else {
+                        console.log('❌ Token inválido, redirigiendo a login...');
+                        localStorage.removeItem('agoraToken');
+                        window.location.href = 'iniciosesion.html?redirect=chats';
+                    }
+                } else {
+                    console.log('❌ AgoraAPI no disponible, redirigiendo a login...');
+                    window.location.href = 'iniciosesion.html?redirect=chats';
+                }
+            } catch (error) {
+                console.error('💥 Error verificando sesión:', error);
+                localStorage.removeItem('agoraToken');
+                window.location.href = 'iniciosesion.html?redirect=chats';
+            }
+        }
+        
+        // Función para manejar "Iniciar sesión"
+        function irALogin() {
+            console.log('🔐 Redirigiendo a login para volver al index...');
+            const loginUrl = 'iniciosesion.html?redirect=index';
+            console.log('🔗 URL de login:', loginUrl);
+            window.location.href = loginUrl;
+        }
+        
+        // Verificar sesión al cargar la página para mostrar el menú de usuario
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('agoraToken');
+            if (token && typeof AgoraAPI !== 'undefined') {
+                AgoraAPI.verifyToken().then(result => {
+                    if (result.valid) {
+                        // Mostrar información del usuario logueado
+                        console.log('✅ Usuario logueado:', result.user);
+                        // Aquí puedes mostrar el menú de usuario si lo tienes
+                        const userIcon = document.getElementById('userIcon');
+                        if (userIcon) {
+                            userIcon.style.display = 'block';
+                        }
+                    }
+                }).catch(error => {
+                    console.log('Token inválido, limpiando...');
+                    localStorage.removeItem('agoraToken');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
