@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style3.css">
+    <link rel="stylesheet" href="css/chat-bots.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Ágora - Demo Chat con Bots (Sin Login)</title>
+    <style>
+        .demo-banner {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        .demo-user {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        🤖 DEMO MODE - TFG ÁGORA CHAT CON BOTS IA (Sin Autenticación)
+    </div>
+    
+    <div class="container">
+        <!-- Usuario Demo -->
+        <div class="demo-user">
+            <strong>👤 Usuario Demo:</strong> Luis Ángel | <strong>📧</strong> luis@agora.com | <strong>🎯</strong> Probando Sistema de Bots
+        </div>
+        
+        <!-- Servidores -->
+        <div class="servers-panel">
+            <h4 style="color: white; text-align: center; margin-bottom: 15px;">🏠 Servidores</h4>
+            <ul>
+                <li class="active-server" onclick="selectServer(1)">
+                    <a href="#"><img src="imagenes/server1.jpg" alt="Server 1" class="server-img"></a>
+                </li>
+                <li onclick="selectServer(2)">
+                    <a href="#"><img src="imagenes/server2.jpg" alt="Server 2" class="server-img"></a>
+                </li>
+                <li onclick="selectServer(3)">
+                    <a href="#"><img src="imagenes/server3.jpg" alt="Server 3" class="server-img"></a>
+                </li>
+            </ul>
+            <div class="server" title="Añadir Servidor">+</div>
+        </div>
+
+        <!-- Canales -->
+        <div class="channels-panel">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar canales..." class="search-input" id="searchInput">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <ul id="channelList">
+                <li class="active-channel" onclick="selectChannel(1, 'General')">
+                    <a href="#"><img src="imagenes/user1.png" alt="General" class="server-img">💬 General <span class="channel-bot-indicator">3 Bots</span></a>
+                </li>
+                <li onclick="selectChannel(2, 'Desarrollo')">
+                    <a href="#"><img src="imagenes/user2.jpg" alt="Desarrollo" class="server-img">💻 Desarrollo <span class="channel-bot-indicator">2 Bots</span></a>
+                </li>
+                <li onclick="selectChannel(3, 'Gaming')">
+                    <a href="#"><img src="imagenes/user3.png" alt="Gaming" class="server-img">🎮 Gaming <span class="channel-bot-indicator">1 Bot</span></a>
+                </li>
+                <li onclick="selectChannel(4, 'IA Research')">
+                    <a href="#"><img src="imagenes/user4.png" alt="IA" class="server-img">🧠 IA Research <span class="channel-bot-indicator">4 Bots</span></a>
+                </li>
+            </ul>
+        </div>
+    
+        <!-- Chat Principal con Bots (Demo Mode) -->
+        <div class="chat-window">
+            <div class="bot-chat-interface">
+                <!-- Panel de Bots -->
+                <div class="bot-panel" id="botPanel">
+                    <div class="bot-panel-header">
+                        <h3>🤖 Bots Disponibles</h3>
+                        <button class="btn-toggle-bots" onclick="toggleBotPanel()">
+                            <span id="botToggleIcon">⬅</span>
+                        </button>
+                    </div>
+                    <div class="bot-panel-content" id="botPanelContent">
+                        <!-- Bots Activos -->
+                        <div class="bot-section">
+                            <h4>✅ Bots Activos</h4>
+                            <div class="bot-list">
+                                <div class="bot-item active" data-bot-id="1">
+                                    <div class="bot-avatar"><span class="bot-type-icon">🔤</span></div>
+                                    <div class="bot-info">
+                                        <div class="bot-name">SaludaBot</div>
+                                        <div class="bot-description">Saluda a nuevos miembros</div>
+                                        <div class="bot-type">Básico</div>
+                                    </div>
+                                    <div class="bot-actions">
+                                        <button class="btn-bot-test" onclick="testBot(1, 'SaludaBot')">🧪</button>
+                                    </div>
+                                </div>
+
+                                <div class="bot-item active" data-bot-id="2">
+                                    <div class="bot-avatar"><span class="bot-type-icon">📋</span></div>
+                                    <div class="bot-info">
+                                        <div class="bot-name">AyudaBot</div>
+                                        <div class="bot-description">Bot de ayuda con comandos</div>
+                                        <div class="bot-type">Con Reglas</div>
+                                    </div>
+                                    <div class="bot-actions">
+                                        <button class="btn-bot-test" onclick="testBot(2, 'AyudaBot')">🧪</button>
+                                    </div>
+                                </div>
+
+                                <div class="bot-item active" data-bot-id="3">
+                                    <div class="bot-avatar"><span class="bot-type-icon">🧠</span></div>
+                                    <div class="bot-info">
+                                        <div class="bot-name">AgoraAI</div>
+                                        <div class="bot-description">Bot con IA avanzada</div>
+                                        <div class="bot-type">Inteligencia Artificial</div>
+                                    </div>
+                                    <div class="bot-actions">
+                                        <button class="btn-bot-test" onclick="testBot(3, 'AgoraAI')">🧪</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bots Disponibles -->
+                        <div class="bot-section">
+                            <h4>➕ Bots Disponibles</h4>
+                            <div class="bot-list">
+                                <div class="bot-item available" data-bot-id="4">
+                                    <div class="bot-avatar"><span class="bot-type-icon">📋</span></div>
+                                    <div class="bot-info">
+                                        <div class="bot-name">ModeraBot</div>
+                                        <div class="bot-description">Bot de moderación</div>
+                                        <div class="bot-type">Con Reglas</div>
+                                    </div>
+                                    <div class="bot-actions">
+                                        <button class="btn-bot-add" onclick="addBot(4)">➕</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Principal -->
+                <div class="chat-main">
+                    <div class="chat-header" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 15px;">
+                        <h2 id="channelName">💬 General</h2>
+                        <div style="font-size: 14px; opacity: 0.9;">Demo del Sistema de Bots - TFG Ágora</div>
+                    </div>
+
+                    <!-- Área de mensajes -->
+                    <div class="messages-container">
+                        <div class="messages-scroll" id="messagesScroll">
+                            <!-- Mensajes de demostración -->
+                            <div class="message bot-message">
+                                <div class="message-header">
+                                    <span class="message-author">🤖 SaludaBot</span>
+                                    <span class="message-time">10:30</span>
+                                    <span class="bot-type-badge">BÁSICO</span>
+                                </div>
+                                <div class="message-content">¡Bienvenido a Ágora! 👋 Soy SaludaBot y te ayudo a dar la bienvenida.</div>
+                            </div>
+
+                            <div class="message user-message">
+                                <div class="message-header">
+                                    <span class="message-author">👤 Luis</span>
+                                    <span class="message-time">10:32</span>
+                                </div>
+                                <div class="message-content">Hola! ¿Cómo funcionan los bots aquí?</div>
+                            </div>
+
+                            <div class="message bot-message">
+                                <div class="message-header">
+                                    <span class="message-author">🤖 AyudaBot</span>
+                                    <span class="message-time">10:32</span>
+                                    <span class="bot-type-badge">REGLAS</span>
+                                </div>
+                                <div class="message-content">¡Hola Luis! 😊 Tenemos 3 tipos de bots: Básicos (respuestas fijas), con Reglas (lógica condicional) e IA (inteligencia artificial). ¡Prueba escribiendo algo!</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controles de entrada -->
+                    <div class="chat-input-section">
+                        <!-- Input de mensaje -->
+                        <div class="message-input-container">
+                            <button class="multimedia-toggle" onclick="showMultimedia()">😊</button>
+                            <input type="text" 
+                                   id="messageInput" 
+                                   placeholder="Escribe un mensaje para probar los bots..." 
+                                   maxlength="1000"
+                                   onkeypress="handleKeyPress(event)">
+                            <button class="send-button" onclick="sendDemoMessage()">📤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+
+        <!-- Panel de información -->
+        <div class="info-panel">
+            <h3>🤖 Sistema de Bots</h3>
+            <ul>
+                <li><strong>Básicos:</strong> Respuestas predefinidas</li>
+                <li><strong>Reglas:</strong> Lógica condicional</li>
+                <li><strong>IA:</strong> Inteligencia artificial</li>
+                <li><strong>LocalAI:</strong> Integración lista</li>
+            </ul>
+        </div>
+    
+        <!-- Botones inferiores -->
+        <div class="bottom-buttons">
+            <button onclick="showDemo()"><i class="fas fa-info"></i></button>
+            <button onclick="window.open('https://github.com/lmendez861/TFG-gora')"><i class="fas fa-code-branch"></i></button>
+            <button onclick="window.location.href='index.html'"><i class="fas fa-home"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // Demo Data
+        const demoBots = {
+            1: { name: 'SaludaBot', type: 'básico', responses: ['¡Hola! 👋', '¡Bienvenido!', 'Saludos! 😊'] },
+            2: { name: 'AyudaBot', type: 'reglas', responses: ['Puedo ayudarte con: /help, /bots, /info', 'Comandos disponibles: /help, /usuarios', '¿En qué puedo ayudarte?'] },
+            3: { name: 'AgoraAI', type: 'IA', responses: ['Como IA, puedo conversar sobre diversos temas. ¿Qué te interesa?', 'Soy un bot con IA simulada. ¡Pregunta lo que quieras!', 'Mi inteligencia artificial me permite responder de forma contextual.'] }
+        };
+
+        let messageCounter = 1;
+
+        // Simular envío de mensaje
+        function sendDemoMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Añadir mensaje del usuario
+            addMessage(message, 'user', 'Luis');
+            input.value = '';
+
+            // Simular respuesta de bot después de un delay
+            setTimeout(() => {
+                const activeBots = Object.keys(demoBots);
+                const randomBot = activeBots[Math.floor(Math.random() * activeBots.length)];
+                const bot = demoBots[randomBot];
+                const response = bot.responses[Math.floor(Math.random() * bot.responses.length)];
+                
+                addMessage(response, 'bot', bot.name, bot.type);
+            }, 1000 + Math.random() * 2000);
+        }
+
+        // Añadir mensaje al chat
+        function addMessage(content, type, author, botType = null) {
+            const messagesContainer = document.getElementById('messagesScroll');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            
+            const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const icon = type === 'bot' ? '🤖' : '👤';
+            const badge = botType ? `<span class="bot-type-badge">${botType.toUpperCase()}</span>` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <span class="message-author">${icon} ${author}</span>
+                    <span class="message-time">${time}</span>
+                    ${badge}
+                </div>
+                <div class="message-content">${content}</div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Animación de entrada
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                messageDiv.style.transition = 'all 0.3s ease';
+                messageDiv.style.opacity = '1';
+                messageDiv.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Probar bot específico
+        function testBot(botId, botName) {
+            const bot = demoBots[botId];
+            if (bot) {
+                const response = bot.responses[Math.floor(Math.random() * bot.responses.length)];
+                addMessage(`[PRUEBA] ${response}`, 'bot', botName, bot.type);
+            }
+        }
+
+        // Funciones de UI
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendDemoMessage();
+            }
+        }
+
+        function toggleBotPanel() {
+            const panel = document.getElementById('botPanel');
+            const icon = document.getElementById('botToggleIcon');
+            
+            const isCollapsed = panel.classList.contains('collapsed');
+            panel.classList.toggle('collapsed', !isCollapsed);
+            icon.textContent = isCollapsed ? '⬅' : '➡';
+        }
+
+        function selectChannel(id, name) {
+            document.getElementById('channelName').textContent = `💬 ${name}`;
+            
+            // Actualizar canales activos
+            document.querySelectorAll('#channelList li').forEach(li => {
+                li.classList.remove('active-channel');
+            });
+            event.currentTarget.classList.add('active-channel');
+
+            // Simular cambio de contexto
+            const messagesContainer = document.getElementById('messagesScroll');
+            messagesContainer.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-header">
+                        <span class="message-author">🤖 SaludaBot</span>
+                        <span class="message-time">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="bot-type-badge">BÁSICO</span>
+                    </div>
+                    <div class="message-content">¡Bienvenido al canal ${name}! 🎉</div>
+                </div>
+            `;
+        }
+
+        function addBot(botId) {
+            alert(`Bot #${botId} añadido al canal (Demo Mode)`);
+        }
+
+        function showDemo() {
+            alert(`🤖 TFG ÁGORA - DEMO\n\n✅ Sistema de Bots Implementado\n✅ 3 Tipos: Básico, Reglas, IA\n✅ Interface Moderna\n✅ Symfony Backend\n✅ LocalAI Ready\n\n🎓 Trabajo de Fin de Grado\n👨‍💻 Luis Ángel Méndez`);
+        }
+
+        function showMultimedia() {
+            alert('🎨 Sistema multimedia disponible:\n😊 Emojis\n🎨 Stickers\n🎬 GIFs\n\n(Demo Mode - Funcionalidad implementada)');
+        }
+
+        // Inicializar demo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🤖 Demo Mode - TFG Ágora cargado');
+            
+            // Mensaje de bienvenida automático
+            setTimeout(() => {
+                addMessage('¡Sistema de demo cargado! Escribe algo para probar los bots. 🚀', 'bot', 'Sistema', 'INFO');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

@@ -2,14 +2,18 @@
 
 .bot-chat-interface {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 80px); /* Ajustar para headers */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 /* ====== PANEL DE BOTS ====== */
 .bot-panel {
-    width: 300px;
+    width: 320px;
+    min-width: 320px;
+    max-width: 400px;
     background: rgba(255, 255, 255, 0.95);
     border-right: 2px solid #4CAF50;
     display: flex;
@@ -17,6 +21,7 @@
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .bot-panel.collapsed {
@@ -220,6 +225,17 @@
     flex-direction: column;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
+    min-width: 0; /* Permite que se contraiga */
+    overflow: hidden;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 15px 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 .messages-container {
@@ -534,26 +550,41 @@
     letter-spacing: 0.5px;
 }
 
+/* ====== FIXES PARA LAYOUT ====== */
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.bot-chat-interface .chat-window {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+}
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
     .bot-chat-interface {
         flex-direction: column;
-        height: 100vh;
+        height: calc(100vh - 60px);
     }
     
     .bot-panel {
         width: 100%;
-        max-height: 30vh;
+        max-height: 35vh;
         order: 2;
+        min-width: auto;
     }
     
     .chat-main {
         order: 1;
         flex: 1;
+        min-height: 65vh;
     }
     
     .bot-info-panel {
-        display: none !important; /* Ocultar en móvil */
+        display: none !important;
     }
     
     .message {
@@ -562,6 +593,11 @@
     
     .multimedia-grid {
         grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+    }
+    
+    .bot-panel-content {
+        max-height: calc(35vh - 60px);
+        overflow-y: auto;
     }
 }
 
