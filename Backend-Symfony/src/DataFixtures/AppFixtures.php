@@ -7,7 +7,10 @@ use App\Entity\Usuario;
 use App\Entity\Grupo;
 use App\Entity\Membresia;
 use App\Entity\Mensaje;
-use App\Entity\Bot;
+use App\Entity\BotEntity;
+use App\Entity\BotType;
+use App\Entity\BotScope;
+use App\Entity\MultimediaType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -178,32 +181,173 @@ class AppFixtures extends Fixture
         }
 
         // 6. Crear bots
-        $botAsistente = new Bot();
+        $botAsistente = new BotEntity();
         $botAsistente->setNombre('AgoraBot');
-        $botAsistente->setTipo('script');
-        $botAsistente->setConfig([
-            'respuestas' => [
-                'hola' => '¡Hola! 👋 Soy AgoraBot, tu asistente virtual',
-                'ayuda' => 'Puedo ayudarte con información sobre Ágora. Escribe "comandos" para ver qué puedo hacer',
-                'comandos' => 'Comandos disponibles: /tiempo, /usuarios, /grupos, /ayuda'
-            ],
-            'activo_en_grupos' => [1, 2, 3]
-        ]);
+        $botAsistente->setTipo(BotType::BASICO);
+        $botAsistente->setScope(BotScope::GRUPO);
+        $botAsistente->setCreador($admin);
+        // Configuración se manejará por BotConfig separadamente
         $botAsistente->setActivo(true);
         $manager->persist($botAsistente);
 
-        $botNoticiasWeb = new Bot();
+        $botNoticiasWeb = new BotEntity();
         $botNoticiasWeb->setNombre('WebNewsBot');
-        $botNoticiasWeb->setTipo('script');
-        $botNoticiasWeb->setConfig([
-            'categoria' => 'desarrollo_web',
-            'frecuencia' => 'diaria',
-            'activo_en_grupos' => [1]
-        ]);
+        $botNoticiasWeb->setTipo(BotType::REGLAS);
+        $botNoticiasWeb->setScope(BotScope::GRUPO);
+        $botNoticiasWeb->setCreador($moderador);
+        // Configuración se manejará por BotConfig separadamente
         $botNoticiasWeb->setActivo(true);
         $manager->persist($botNoticiasWeb);
 
         // Ejecutar todas las inserciones
+        // 9. Crear bots de ejemplo
+        $this->createExampleBots($manager, $admin, $moderador);
+
+        // 10. Crear multimedia de ejemplo
+        $this->createExampleMultimedia($manager, $admin);
+
         $manager->flush();
+    }
+
+    private function createExampleBots($manager, $admin, $moderador)
+    {
+        // Bot básico de saludo
+        $botSaludo = new \App\Entity\BotEntity();
+        $botSaludo->setNombre('SaludaBot');
+        $botSaludo->setTipo(BotType::BASICO);
+        $botSaludo->setScope(BotScope::GRUPO);
+        $botSaludo->setCreador($admin);
+        $botSaludo->setDescripcion('Bot amigable que saluda a los usuarios');
+        $botSaludo->setPersonalidad('Soy un bot muy amigable que le gusta saludar a todos');
+        $manager->persist($botSaludo);
+
+        // Respuestas del bot de saludo
+        $respuesta1 = new \App\Entity\BotRespuesta();
+        $respuesta1->setBot($botSaludo);
+        $respuesta1->setKeyword('hola');
+        $respuesta1->setRespuesta('¡Hola! ¿Cómo estás? 😊');
+        $respuesta1->setPrioridad(5);
+        $manager->persist($respuesta1);
+
+        $respuesta2 = new \App\Entity\BotRespuesta();
+        $respuesta2->setBot($botSaludo);
+        $respuesta2->setKeyword('buenos dias');
+        $respuesta2->setRespuesta('¡Buenos días! ¡Que tengas un excelente día! ☀️');
+        $respuesta2->setPrioridad(5);
+        $manager->persist($respuesta2);
+
+        $respuesta3 = new \App\Entity\BotRespuesta();
+        $respuesta3->setBot($botSaludo);
+        $respuesta3->setKeyword('gracias');
+        $respuesta3->setRespuesta('¡De nada! Siempre es un placer ayudar 😄');
+        $respuesta3->setPrioridad(3);
+        $manager->persist($respuesta3);
+
+        // Bot de ayuda con reglas
+        $botAyuda = new \App\Entity\BotEntity();
+        $botAyuda->setNombre('AyudaBot');
+        $botAyuda->setTipo(BotType::REGLAS);
+        $botAyuda->setScope(BotScope::GRUPO);
+        $botAyuda->setCreador($moderador);
+        $botAyuda->setDescripcion('Bot que proporciona ayuda sobre Ágora');
+        $botAyuda->setPersonalidad('Soy un bot muy útil que conoce todo sobre Ágora');
+        $manager->persist($botAyuda);
+
+        // Respuestas del bot de ayuda
+        $ayuda1 = new \App\Entity\BotRespuesta();
+        $ayuda1->setBot($botAyuda);
+        $ayuda1->setKeyword('ayuda');
+        $ayuda1->setRespuesta('¿En qué puedo ayudarte? Puedo explicarte sobre grupos, mensajes, o comandos. Escribe "comandos" para ver una lista.');
+        $ayuda1->setPrioridad(10);
+        $manager->persist($ayuda1);
+
+        $ayuda2 = new \App\Entity\BotRespuesta();
+        $ayuda2->setBot($botAyuda);
+        $ayuda2->setKeyword('comandos');
+        $ayuda2->setRespuesta('Comandos disponibles:\n- "grupos" - Información sobre grupos\n- "mensajes" - Cómo enviar mensajes\n- "bots" - Información sobre bots');
+        $ayuda2->setPrioridad(10);
+        $manager->persist($ayuda2);
+
+        $ayuda3 = new \App\Entity\BotRespuesta();
+        $ayuda3->setBot($botAyuda);
+        $ayuda3->setKeyword('bots');
+        $ayuda3->setRespuesta('Los bots en Ágora pueden ser básicos, con reglas o usar IA. Pueden ayudarte con tareas, responder preguntas y hacer el chat más divertido!');
+        $ayuda3->setPrioridad(8);
+        $manager->persist($ayuda3);
+
+        // Bot de IA (para cuando esté LocalAI)
+        $botIA = new \App\Entity\BotEntity();
+        $botIA->setNombre('AgoraAI');
+        $botIA->setTipo(BotType::IA);
+        $botIA->setScope(BotScope::GRUPO);
+        $botIA->setCreador($admin);
+        $botIA->setDescripcion('Bot inteligente con IA que puede mantener conversaciones naturales');
+        $botIA->setPersonalidad('Soy un asistente de IA inteligente y conversacional. Me gusta ayudar y aprender de las conversaciones.');
+        $botIA->setModeloAsociado('gpt4all-j');
+        $manager->persist($botIA);
+
+        // Bot privado para pruebas
+        $botPrivado = new \App\Entity\BotEntity();
+        $botPrivado->setNombre('MiAsistente');
+        $botPrivado->setTipo(BotType::REGLAS);
+        $botPrivado->setScope(BotScope::PRIVADO);
+        $botPrivado->setCreador($admin);
+        $botPrivado->setDescripcion('Asistente personal privado');
+        $botPrivado->setPersonalidad('Soy tu asistente personal. Solo tú puedes verme y usar mis servicios.');
+        $manager->persist($botPrivado);
+
+        $privado1 = new \App\Entity\BotRespuesta();
+        $privado1->setBot($botPrivado);
+        $privado1->setKeyword('recordatorio');
+        $privado1->setRespuesta('¡Por supuesto! Aunque por ahora no puedo guardar recordatorios, en el futuro podré ayudarte con eso.');
+        $privado1->setPrioridad(7);
+        $manager->persist($privado1);
+    }
+
+    private function createExampleMultimedia($manager, $admin)
+    {
+        // Emojis de ejemplo
+        $emoji1 = new \App\Entity\Multimedia();
+        $emoji1->setNombre('Sonrisa');
+        $emoji1->setTipo(MultimediaType::EMOJI);
+        $emoji1->setUrl('😊');
+        $emoji1->setCategoria('emociones');
+        $emoji1->setTags(['feliz', 'sonrisa', 'alegria']);
+        $emoji1->setSubidoPor($admin);
+        $manager->persist($emoji1);
+
+        $emoji2 = new \App\Entity\Multimedia();
+        $emoji2->setNombre('Pulgar Arriba');
+        $emoji2->setTipo(MultimediaType::EMOJI);
+        $emoji2->setUrl('👍');
+        $emoji2->setCategoria('reacciones');
+        $emoji2->setTags(['ok', 'bien', 'aprobacion']);
+        $emoji2->setSubidoPor($admin);
+        $manager->persist($emoji2);
+
+        // Stickers de ejemplo (URLs de ejemplo)
+        $sticker1 = new \App\Entity\Multimedia();
+        $sticker1->setNombre('Gato Feliz');
+        $sticker1->setTipo(MultimediaType::STICKER);
+        $sticker1->setUrl('https://example.com/stickers/gato_feliz.png');
+        $sticker1->setThumbnailUrl('https://example.com/stickers/thumbs/gato_feliz_thumb.png');
+        $sticker1->setCategoria('animales');
+        $sticker1->setTags(['gato', 'feliz', 'mascota']);
+        $sticker1->setFormato('png');
+        $sticker1->setSubidoPor($admin);
+        $manager->persist($sticker1);
+
+        // GIFs de ejemplo
+        $gif1 = new \App\Entity\Multimedia();
+        $gif1->setNombre('Aplausos');
+        $gif1->setTipo(MultimediaType::GIF);
+        $gif1->setUrl('https://example.com/gifs/aplausos.gif');
+        $gif1->setThumbnailUrl('https://example.com/gifs/thumbs/aplausos_thumb.jpg');
+        $gif1->setCategoria('celebracion');
+        $gif1->setTags(['aplausos', 'celebrar', 'bravo']);
+        $gif1->setFormato('gif');
+        $gif1->setTamañoBytes(1024000); // 1MB
+        $gif1->setSubidoPor($admin);
+        $manager->persist($gif1);
     }
 }

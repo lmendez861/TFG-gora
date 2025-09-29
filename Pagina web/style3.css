@@ -467,3 +467,129 @@ body {
 .disconnect-link i {
     margin-right: 5px;
 }
+
+/* ====== INTEGRACIÓN CON BOTS ====== */
+
+/* Canal activo para mostrar bots */
+.active-channel {
+    background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+    border-radius: 8px;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.active-channel a {
+    color: white !important;
+    font-weight: bold;
+}
+
+/* Loading state para chat */
+.loading-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-chat h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    animation: pulse 2s infinite;
+}
+
+.loading-chat p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Indicadores de bots en canales */
+.channel-bot-indicator {
+    background: #4CAF50;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+/* Mejoras para la información del usuario */
+#userWelcome {
+    background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Botón de logout mejorado */
+#userWelcome button {
+    background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+    transition: all 0.3s ease;
+}
+
+#userWelcome button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* Notificaciones de bot */
+.bot-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+    animation: slideInFromRight 0.3s ease;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Override para que el chat ocupe todo el espacio */
+.chat-window {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ocultar elementos originales cuando se use el sistema de bots */
+.bot-enabled .chat-window .chat-header,
+.bot-enabled .chat-window .messages,
+.bot-enabled .chat-window .chat-input {
+    display: none;
+}

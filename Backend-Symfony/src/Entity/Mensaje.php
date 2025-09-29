@@ -33,6 +33,17 @@ class Mensaje
     #[ORM\Column(type: 'string', enumType: TipoMensaje::class)]
     private TipoMensaje $tipo = TipoMensaje::TEXTO;
 
+    #[ORM\Column(type: 'string', enumType: AutorTipo::class)]
+    private AutorTipo $autorTipo = AutorTipo::USUARIO;
+
+    #[ORM\ManyToOne(targetEntity: BotEntity::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?BotEntity $bot = null;
+
+    #[ORM\ManyToOne(targetEntity: Multimedia::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Multimedia $multimedia = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTimeInterface $creadoAt;
 
@@ -155,11 +166,37 @@ class Mensaje
 
         return $this;
     }
-}
 
-enum TipoMensaje: string
-{
-    case TEXTO = 'texto';
-    case SISTEMA = 'sistema';
-    case ARCHIVO = 'archivo';
+    public function getAutorTipo(): AutorTipo
+    {
+        return $this->autorTipo;
+    }
+
+    public function setAutorTipo(AutorTipo $autorTipo): self
+    {
+        $this->autorTipo = $autorTipo;
+        return $this;
+    }
+
+    public function getBot(): ?BotEntity
+    {
+        return $this->bot;
+    }
+
+    public function setBot(?BotEntity $bot): self
+    {
+        $this->bot = $bot;
+        return $this;
+    }
+
+    public function getMultimedia(): ?Multimedia
+    {
+        return $this->multimedia;
+    }
+
+    public function setMultimedia(?Multimedia $multimedia): self
+    {
+        $this->multimedia = $multimedia;
+        return $this;
+    }
 }

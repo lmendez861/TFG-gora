@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/chat-bots.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    
-    <title>Chats</title>
+    <title>Ágora - Chat con Bots IA</title>
 </head>
 <body>
     <div class="container">
@@ -68,23 +67,12 @@
         </div>
         </div>
     
-        <!-- Chat Principal -->
-        <div class="chat-window">
-            <div class="chat-header">
-                <h2>Ana</h2>
-                <ul>
-                    <li><a href="#" onclick="openCallModal('phone')"><i class="fas fa-phone"></i></a></li>
-                    <li><a href="#" onclick="openCallModal('video')"><i class="fas fa-video"></i></a></li>
-                </ul>
-            </div>
-          
-            <div class="messages">
-                <div class="message received">Hola, ¿cómo estás?</div>
-                <div class="message sent">Bien, ¿y tú?</div>
-            </div>
-            <div class="chat-input">
-                <textarea placeholder="Escribe un mensaje..."></textarea>
-                <button>Enviar</button>
+        <!-- Chat Principal con Bots -->
+        <div id="botChatContainer" class="chat-window">
+            <!-- El contenido se genera dinámicamente por chat-bots.js -->
+            <div class="loading-chat">
+                <h2>🤖 Cargando Chat con Bots IA...</h2>
+                <p>Preparando la experiencia de chat inteligente</p>
             </div>
         </div>       
         <!-- Modal de llamada -->
@@ -146,10 +134,15 @@
     
     <!-- Scripts -->
     <script src="js/api.js"></script>
+    <script src="js/chat-bots.js"></script>
     <script src="MenuUser.js"></script>
     <script>
+        // Variables globales
+        let selectedGroupId = null;
+        
         // Verificar si el usuario está logueado al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando Ágora Chat con Bots...');
             AgoraAPI.initializeAuth();
             
             if (currentUser) {
@@ -157,23 +150,105 @@
                 const welcomeDiv = document.getElementById('userWelcome');
                 const welcomeMessage = document.getElementById('welcomeMessage');
                 
-                welcomeMessage.textContent = `¡Bienvenido ${currentUser.nombre} (@${currentUser.username})! Rol: ${currentUser.rol}`;
+                welcomeMessage.textContent = `¡Bienvenido ${currentUser.nombre} (@${currentUser.username})! 🤖 Chat con Bots IA`;
                 welcomeDiv.style.display = 'block';
                 
-                console.log('Usuario logueado:', currentUser);
+                console.log('✅ Usuario autenticado:', currentUser);
+                
+                // Inicializar el chat con bots
+                initializeBotChat();
+                
             } else {
                 // Si no está logueado, redirigir al login
-                alert('Debes iniciar sesión para acceder a los chats');
+                alert('🔐 Debes iniciar sesión para acceder a los chats con bots');
                 window.location.href = 'iniciosesion.html';
+            }
+        });
+        
+        // Inicializar chat con bots
+        function initializeBotChat() {
+            console.log('🤖 Iniciando BotChatManager...');
+            
+            // Crear instancia del manager de chat con bots
+            botChatManager = new BotChatManager('botChatContainer');
+            
+            // Por defecto, cargar el primer "grupo" (simulado por ahora)
+            // En el futuro esto vendrá de la API de grupos
+            setTimeout(() => {
+                selectGroup(1); // Grupo de ejemplo
+            }, 1000);
+        }
+        
+        // Función para seleccionar un grupo/chat
+        function selectGroup(groupId) {
+            console.log('📂 Seleccionando grupo:', groupId);
+            selectedGroupId = groupId;
+            
+            if (botChatManager) {
+                botChatManager.setCurrentGroup(groupId);
+            }
+            
+            // Actualizar UI para mostrar grupo seleccionado
+            updateSelectedGroup(groupId);
+        }
+        
+        // Actualizar UI del grupo seleccionado
+        function updateSelectedGroup(groupId) {
+            // Remover clase activa de todos los canales
+            document.querySelectorAll('#channelList li').forEach(li => {
+                li.classList.remove('active-channel');
+            });
+            
+            // Agregar clase activa al canal seleccionado
+            // Por ahora usamos el primer canal como ejemplo
+            const firstChannel = document.querySelector('#channelList li:first-child');
+            if (firstChannel) {
+                firstChannel.classList.add('active-channel');
+            }
+        }
+        
+        // Eventos para selección de canales
+        document.addEventListener('click', function(e) {
+            const channelLink = e.target.closest('#channelList a');
+            if (channelLink) {
+                e.preventDefault();
+                
+                // Extraer ID del canal (por ahora usamos IDs secuenciales)
+                const channelItems = Array.from(document.querySelectorAll('#channelList li'));
+                const clickedIndex = channelItems.findIndex(li => li.contains(channelLink));
+                const groupId = clickedIndex + 1; // IDs empiezan en 1
+                
+                selectGroup(groupId);
             }
         });
         
         // Función para cerrar sesión
         function logout() {
             AgoraAPI.logout();
-            alert('Sesión cerrada');
+            alert('📤 Sesión cerrada');
             window.location.href = 'index.html';
         }
+        
+        // Función para verificar estado de LocalAI
+        async function checkLocalAIStatus() {
+            try {
+                const status = await AgoraAPI.getLocalAIStatus();
+                console.log('🧠 Estado de LocalAI:', status);
+                
+                if (status.success && status.disponible) {
+                    console.log('✅ LocalAI está disponible');
+                } else {
+                    console.log('⚠️ LocalAI no está disponible, usando respuestas simuladas');
+                }
+            } catch (error) {
+                console.error('❌ Error verificando LocalAI:', error);
+            }
+        }
+        
+        // Verificar LocalAI cada 30 segundos
+        setInterval(checkLocalAIStatus, 30000);
+        checkLocalAIStatus(); // Verificación inicial
+        
     </script>
 </body>
 </html>

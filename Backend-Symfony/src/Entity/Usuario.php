@@ -44,6 +44,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $activo = true;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isBot = false;
+
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Mensaje::class)]
     private Collection $mensajes;
 
@@ -250,6 +253,17 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    public function isBot(): bool
+    {
+        return $this->isBot;
+    }
+
+    public function setIsBot(bool $isBot): self
+    {
+        $this->isBot = $isBot;
         return $this;
     }
 }
