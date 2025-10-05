@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ágora - Plataforma de Comunicación Integral</title>
+    
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/bulma-agora-theme.css">
+    
+    <!-- AI Service -->
+    <script src="js/agora-ai.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        /* ===== SIDEBAR SERVIDORES (Discord Style) ===== */
+        .servers-sidebar {
+            width: 72px;
+            background: #202225;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 8px;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #36393f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dcddde;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background: #5865f2;
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+            background: #5865f2;
+        }
+
+        .server-icon.agora-home {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+        }
+
+        .server-pill {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            left: -16px;
+            transform: scale(0);
+            transition: transform 0.2s ease;
+        }
+
+        .server-icon:hover .server-pill,
+        .server-icon.active .server-pill {
+            transform: scale(1);
+            height: 20px;
+        }
+
+        /* ===== SIDEBAR CANALES (Discord Style) ===== */
+        .channels-sidebar {
+            width: 240px;
+            background: #2f3136;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #202225;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .channels-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 8px;
+        }
+
+        .channel-category {
+            color: #96989d;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin: 16px 8px 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin: 1px 0;
+            border-radius: 4px;
+            color: #96989d;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .channel-item:hover {
+            background: #34373c;
+            color: #dcddde;
+        }
+
+        .channel-item.active {
+            background: #404249;
+            color: white;
+        }
+
+        .channel-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .channel-name {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .channel-badge {
+            background: #f04747;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ===== ÁREA PRINCIPAL ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        /* Header del Chat */
+        .chat-header {
+            height: 48px;
+            background: white;
+            border-bottom: 1px solid #e3e5e8;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .channel-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Indicador de Estado IA */
+        .ai-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(88, 101, 242, 0.1);
+            border: 1px solid rgba(88, 101, 242, 0.2);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .ai-status-indicator:hover {
+            background: rgba(88, 101, 242, 0.15);
+            border-color: rgba(88, 101, 242, 0.4);
+        }
+
+        .ai-status-icon {
+            width: 16px;
+            height: 16px;
+            color: #5865f2;
+        }
+
+        .ai-status-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5865f2;
+        }
+
+        .ai-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .ai-status-dot.online {
+            background: #23a55a;
+            animation: pulse-green 2s infinite;
+        }
+
+        .ai-status-dot.offline {
+            background: #f23f42;
+        }
+
+        .ai-status-dot.loading {
+            background: #f0b232;
+            animation: pulse-yellow 1s infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes pulse-yellow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .control-btn {
+            width: 24px;
+            height: 24px;
+            color: #4f5660;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .control-btn:hover {
+            color: #060607;
+        }
+
+        /* Área de Mensajes */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .message:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            margin-right: 8px;
+            color: #2c2f33;
+        }
+
+        .message-timestamp {
+            font-size: 12px;
+            color: #72767d;
+        }
+
+        .message-text {
+            color: #2c2f33;
+            line-height: 1.375;
+        }
+
+        .bot-message {
+            border-left: 4px solid #5865f2;
+        }
+
+        .bot-message .message-avatar {
+            background: linear-gradient(135deg, #5865f2 0%, #3b45c4 100%);
+        }
+
+        .ai-powered {
+            border-left: 4px solid #00d4aa;
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.05) 0%, rgba(0, 212, 170, 0.02) 100%);
+        }
+
+        .ai-powered .message-avatar {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            animation: pulse-ai 2s infinite;
+        }
+
+        .system-message {
+            border-left: 4px solid #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .response-time {
+            color: #a3a6aa;
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        .message-metadata {
+            font-size: 11px;
+            color: #72767d;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse-ai {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* Input de Mensaje */
+        .message-input-area {
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #e3e5e8;
+        }
+
+        .message-input-container {
+            background: #f2f3f5;
+            border-radius: 24px;
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+        }
+
+        .message-input-container:focus-within {
+            background: white;
+            box-shadow: 0 0 0 2px #5865f2;
+        }
+
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            resize: none;
+        }
+
+        .input-action-btn {
+            width: 24px;
+            height: 24px;
+            color: #4f5660;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .input-action-btn:hover {
+            color: #5865f2;
+        }
+
+        /* ===== PANEL LATERAL DERECHO ===== */
+        .right-panel {
+            width: 240px;
+            background: white;
+            border-left: 1px solid #e3e5e8;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #e3e5e8;
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+            color: #4f5660;
+        }
+
+        .panel-tab.active {
+            color: #5865f2;
+            border-bottom: 2px solid #5865f2;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+
+        .member-item:hover {
+            opacity: 0.8;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 500;
+            color: #2c2f33;
+        }
+
+        .member-status {
+            font-size: 12px;
+            color: #72767d;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: 2px solid white;
+        }
+
+        .status-online { background: #3ba55c; }
+        .status-idle { background: #faa61a; }
+        .status-dnd { background: #ed4245; }
+        .status-offline { background: #747f8d; }
+
+        /* ===== MODALES ===== */
+        .feature-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .channels-sidebar {
+                width: 0;
+                overflow: hidden;
+                transition: width 0.3s ease;
+            }
+
+            .channels-sidebar.mobile-open {
+                width: 240px;
+            }
+
+            .right-panel {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #4f5660;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #72767d;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #72767d;
+            animation: typingAnimation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* ===== NOTIFICACIONES ===== */
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+
+        /* ===== PANEL DE CONTROL IA ===== */
+        .ai-control-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .ai-control-panel.show {
+            transform: translateX(0);
+        }
+
+        .ai-panel-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #5865f2 0%, #3b45c4 100%);
+            color: white;
+        }
+
+        .ai-panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .ai-panel-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.15s ease;
+        }
+
+        .ai-panel-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .ai-section {
+            padding: 20px;
+            border-bottom: 1px solid #e3e5e8;
+        }
+
+        .ai-section:last-child {
+            border-bottom: none;
+        }
+
+        .ai-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #2c2f33;
+            font-weight: 600;
+        }
+
+        .ai-status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .ai-status-card {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #5865f2;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #72767d;
+            margin-bottom: 4px;
+        }
+
+        .status-value {
+            font-weight: 600;
+            color: #2c2f33;
+        }
+
+        .model-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .model-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .model-item:hover {
+            background: #e9ecef;
+        }
+
+        .model-item.active {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            color: white;
+        }
+
+        .model-item.loading {
+            cursor: default;
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ai-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .ai-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e3e5e8;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ai-action-btn:hover {
+            background: #e9ecef;
+            border-color: #5865f2;
+            color: #5865f2;
+        }
+
+        .ai-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #72767d;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #2c2f33;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #e3e5e8;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            margin: 16px 0;
+            transition: all 0.15s ease;
+        }
+
+        .file-upload-area:hover,
+        .file-upload-area.dragover {
+            border-color: #5865f2;
+            background: rgba(88, 101, 242, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar de Servidores -->
+        <div class="servers-sidebar">
+            <div class="server-icon agora-home active" title="Ágora Principal">
+                <div class="server-pill"></div>
+                <i data-lucide="home" width="20" height="20"></i>
+            </div>
+            <div class="server-icon" title="Servidor Gaming">
+                <div class="server-pill"></div>
+                G
+            </div>
+            <div class="server-icon" title="Servidor Estudio">
+                <div class="server-pill"></div>
+                E
+            </div>
+            <div class="server-icon" title="Servidor IA">
+                <div class="server-pill"></div>
+                <i data-lucide="bot" width="20" height="20"></i>
+            </div>
+            <div class="server-icon" title="Añadir Servidor">
+                <i data-lucide="plus" width="20" height="20"></i>
+            </div>
+        </div>
+
+        <!-- Sidebar de Canales -->
+        <div class="channels-sidebar" id="channelsSidebar">
+            <div class="server-header">
+                <span>🏛️ TFG Ágora</span>
+                <i data-lucide="chevron-down" width="16" height="16"></i>
+            </div>
+
+            <div class="channels-list">
+                <!-- Canales de Texto -->
+                <div class="channel-category">
+                    <span><i data-lucide="hash" width="12" height="12"></i> Canales de Texto</span>
+                    <i data-lucide="plus" width="12" height="12"></i>
+                </div>
+                
+                <div class="channel-item active">
+                    <i data-lucide="hash" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">general</span>
+                </div>
+                
+                <div class="channel-item">
+                    <i data-lucide="hash" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">desarrollo</span>
+                    <span class="channel-badge">3</span>
+                </div>
+                
+                <div class="channel-item">
+                    <i data-lucide="bot" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">bots-ia</span>
+                </div>
+
+                <div class="channel-item">
+                    <i data-lucide="file" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">archivos</span>
+                </div>
+
+                <!-- Canales de Voz/Video -->
+                <div class="channel-category">
+                    <span><i data-lucide="volume-2" width="12" height="12"></i> Canales de Voz</span>
+                    <i data-lucide="plus" width="12" height="12"></i>
+                </div>
+                
+                <div class="channel-item">
+                    <i data-lucide="volume-2" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">Sala General</span>
+                </div>
+                
+                <div class="channel-item">
+                    <i data-lucide="video" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">Videollamada</span>
+                </div>
+
+                <div class="channel-item">
+                    <i data-lucide="screen-share" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">Compartir Pantalla</span>
+                </div>
+
+                <!-- Funciones Especiales -->
+                <div class="channel-category">
+                    <span><i data-lucide="sparkles" width="12" height="12"></i> IA & Automatización</span>
+                    <i data-lucide="settings" width="12" height="12"></i>
+                </div>
+
+                <div class="channel-item">
+                    <i data-lucide="brain" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">ChatGPT Local</span>
+                </div>
+
+                <div class="channel-item">
+                    <i data-lucide="wand-2" class="channel-icon" width="16" height="16"></i>
+                    <span class="channel-name">Generador Contenido</span>
+                </div>
+
+                <div class="channel-item" onclick="showCreateBotModal()">
+                    <i data-lucide="plus" class="channel-icon" width="16" height="16" style="color: #3ba55c;"></i>
+                    <span class="channel-name" style="color: #3ba55c;">Crear Bot Personal</span>
+                </div>
+
+                <!-- Bots Personales Existentes -->
+                <div class="channel-category">
+                    <span><i data-lucide="user" width="12" height="12"></i> Mis Bots</span>
+                    <i data-lucide="settings" width="12" height="12" onclick="showBotsManager()"></i>
+                </div>
+
+                <div class="channel-item" id="myCustomBots">
+                    <!-- Los bots personales se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <!-- Header del Chat -->
+            <div class="chat-header">
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" width="20" height="20"></i>
+                </button>
+                
+                <div class="channel-info">
+                    <i data-lucide="hash" width="20" height="20" style="color: #72767d; margin-right: 8px;"></i>
+                    <span style="font-weight: 600; color: #060607;">general</span>
+                    <span style="color: #72767d; margin-left: 8px;">Canal principal del servidor</span>
+                </div>
+
+                <div class="chat-controls">
+                    <!-- Indicador de Estado IA -->
+                    <div class="ai-status-indicator" id="aiStatusIndicator" onclick="toggleAIPanel()">
+                        <i data-lucide="brain-circuit" class="ai-status-icon" title="Estado de IA"></i>
+                        <span class="ai-status-text">IA</span>
+                        <div class="ai-status-dot offline"></div>
+                    </div>
+                    
+                    <i data-lucide="phone" class="control-btn" title="Llamada de voz" onclick="startVoiceCall()"></i>
+                    <i data-lucide="video" class="control-btn" title="Videollamada" onclick="startVideoCall()"></i>
+                    <i data-lucide="users" class="control-btn" title="Miembros"></i>
+                    <i data-lucide="search" class="control-btn" title="Buscar"></i>
+                    <i data-lucide="bell" class="control-btn" title="Notificaciones"></i>
+                    <i data-lucide="help-circle" class="control-btn" title="Ayuda"></i>
+                </div>
+            </div>
+
+            <!-- Área de Mensajes -->
+            <div class="messages-area" id="messagesArea">
+                <!-- Mensaje de Bienvenida -->
+                <div class="message">
+                    <div class="message-avatar">AG</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Ágora System</span>
+                            <span class="message-timestamp">Hoy a las 10:30</span>
+                        </div>
+                        <div class="message-text">
+                            🎉 <strong>¡Bienvenido a Ágora!</strong> Una plataforma que combina lo mejor de Discord, WhatsApp, Zoom, Google Drive y Telegram con IA integrada.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje con Bot IA -->
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Asistente IA</span>
+                            <span class="message-timestamp">Hoy a las 10:31</span>
+                        </div>
+                        <div class="message-text">
+                            ¡Hola! Soy tu asistente inteligente. Puedo ayudarte con:
+                            <br>• 📝 Generar documentos y contenido
+                            <br>• 🔍 Buscar información en archivos
+                            <br>• 📊 Analizar datos y crear resúmenes
+                            <br>• 🎨 Crear imágenes y multimedia
+                            <br>• 💬 Moderar conversaciones automáticamente
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje de Usuario -->
+                <div class="message">
+                    <div class="message-avatar">JS</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Juan Estudiante</span>
+                            <span class="message-timestamp">Hoy a las 10:45</span>
+                        </div>
+                        <div class="message-text">
+                            ¡Increíble! ¿Podrías ayudarme a crear un resumen de mi proyecto de TFG?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje con Archivo -->
+                <div class="message">
+                    <div class="message-avatar">MA</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">María Admin</span>
+                            <span class="message-timestamp">Hoy a las 11:00</span>
+                        </div>
+                        <div class="message-text">
+                            He subido la documentación del proyecto:
+                            <div style="margin-top: 8px; padding: 12px; background: #f2f3f5; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="file-text" width="24" height="24" style="color: #5865f2;"></i>
+                                <div>
+                                    <div style="font-weight: 500;">TFG_Documentacion.pdf</div>
+                                    <div style="font-size: 12px; color: #72767d;">2.4 MB • PDF</div>
+                                </div>
+                                <i data-lucide="download" width="20" height="20" style="color: #72767d; cursor: pointer;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indicador de escritura -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <i data-lucide="bot" width="16" height="16"></i>
+                    <span>Asistente IA está escribiendo</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input de Mensaje -->
+            <div class="message-input-area">
+                <!-- Área de Drag & Drop -->
+                <div class="file-upload-area" id="fileUploadArea" style="display: none;">
+                    <i data-lucide="upload-cloud" width="32" height="32" style="color: #5865f2; margin-bottom: 8px;"></i>
+                    <div>Suelta tus archivos aquí para subirlos</div>
+                    <div style="font-size: 12px; color: #72767d; margin-top: 4px;">
+                        Soporta imágenes, videos, documentos y más
+                    </div>
+                </div>
+
+                <div class="message-input-container">
+                    <i data-lucide="plus-circle" class="input-action-btn" title="Adjuntar archivo" onclick="triggerFileUpload()"></i>
+                    
+                    <textarea 
+                        class="message-input" 
+                        id="messageInput"
+                        placeholder="Escribe un mensaje en #general..."
+                        rows="1"
+                        onkeypress="handleKeyPress(event)"
+                        oninput="handleInput(event)"
+                    ></textarea>
+                    
+                    <i data-lucide="smile" class="input-action-btn" title="Emoji"></i>
+                    <i data-lucide="mic" class="input-action-btn" title="Mensaje de voz"></i>
+                    <i data-lucide="send" class="input-action-btn" title="Enviar" onclick="sendMessage()"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Lateral Derecho -->
+        <div class="right-panel">
+            <div class="panel-tabs">
+                <div class="panel-tab active" onclick="switchTab('members')">Miembros</div>
+                <div class="panel-tab" onclick="switchTab('files')">Archivos</div>
+            </div>
+
+            <div class="panel-content" id="membersPanel">
+                <!-- Lista de Miembros Online -->
+                <div style="margin-bottom: 16px; font-weight: 600; color: #2c2f33; font-size: 12px; text-transform: uppercase;">
+                    En línea — 4
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative;">
+                        AG
+                        <div class="status-indicator status-online"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Ágora Admin</div>
+                        <div class="member-status">Desarrollando</div>
+                    </div>
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative;">
+                        JS
+                        <div class="status-indicator status-online"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Juan Estudiante</div>
+                        <div class="member-status">Estudiando TFG</div>
+                    </div>
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative;">
+                        🤖
+                        <div class="status-indicator status-online"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Asistente IA</div>
+                        <div class="member-status">Siempre disponible</div>
+                    </div>
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative;">
+                        MA
+                        <div class="status-indicator status-idle"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">María Admin</div>
+                        <div class="member-status">Ausente</div>
+                    </div>
+                </div>
+
+                <!-- Bots -->
+                <div style="margin: 24px 0 16px 0; font-weight: 600; color: #2c2f33; font-size: 12px; text-transform: uppercase;">
+                    Bots — 2
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative; background: linear-gradient(135deg, #5865f2 0%, #3b45c4 100%);">
+                        🎵
+                        <div class="status-indicator status-online"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">MusicBot</div>
+                        <div class="member-status">Reproduciendo música</div>
+                    </div>
+                </div>
+
+                <div class="member-item">
+                    <div class="member-avatar" style="position: relative; background: linear-gradient(135deg, #f47068 0%, #f47068 100%);">
+                        📊
+                        <div class="status-indicator status-online"></div>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">StatsBot</div>
+                        <div class="member-status">Monitoreando servidor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-content" id="filesPanel" style="display: none;">
+                <div style="margin-bottom: 16px;">
+                    <button class="button is-agora-primary is-small is-fullwidth" onclick="showFileExplorer()">
+                        <i data-lucide="folder-plus" width="16" height="16"></i>
+                        <span>Nuevo Archivo</span>
+                    </button>
+                </div>
+
+                <!-- Lista de archivos recientes -->
+                <div style="margin-bottom: 16px; font-weight: 600; color: #2c2f33; font-size: 12px; text-transform: uppercase;">
+                    Archivos Recientes
+                </div>
+
+                <div style="border-radius: 8px; padding: 12px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer;" onclick="previewFile('doc')">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i data-lucide="file-text" width="20" height="20" style="color: #5865f2;"></i>
+                        <div>
+                            <div style="font-weight: 500; font-size: 14px;">TFG_Documentacion.pdf</div>
+                            <div style="font-size: 12px; color: #72767d;">Hace 2 horas • 2.4 MB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-radius: 8px; padding: 12px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer;" onclick="previewFile('image')">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i data-lucide="image" width="20" height="20" style="color: #ff6b6b;"></i>
+                        <div>
+                            <div style="font-weight: 500; font-size: 14px;">diagrama_sistema.png</div>
+                            <div style="font-size: 12px; color: #72767d;">Ayer • 856 KB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-radius: 8px; padding: 12px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer;" onclick="previewFile('video')">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i data-lucide="video" width="20" height="20" style="color: #4ecdc4;"></i>
+                        <div>
+                            <div style="font-weight: 500; font-size: 14px;">demo_funcionalidad.mp4</div>
+                            <div style="font-size: 12px; color: #72767d;">3 días • 15.2 MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input de archivo oculto -->
+    <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileUpload(event)">
+
+    <!-- Modal de Funcionalidades -->
+    <div class="feature-modal" id="featureModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #2c2f33;">🚀 Funcionalidades de Ágora</h2>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            
+            <div id="modalContent">
+                <!-- Contenido dinámico según la funcionalidad seleccionada -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Crear Bot Personal -->
+    <div class="feature-modal" id="createBotModal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #2c2f33;">🤖 Crear Bot Personal</h2>
+                <button onclick="closeCreateBotModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            
+            <div id="createBotContent">
+                <!-- Formulario de creación de bot -->
+                <div class="bot-creation-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <!-- Información Básica -->
+                        <div>
+                            <h3 style="color: #5865f2; margin-bottom: 15px;">📋 Información Básica</h3>
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Nombre del Bot:</label>
+                            <input type="text" id="botName" placeholder="Ej: AsistentePersonal" style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; margin-bottom: 15px;">
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Descripción:</label>
+                            <textarea id="botDescription" placeholder="Describe qué hace tu bot..." style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; height: 80px; margin-bottom: 15px; resize: vertical;"></textarea>
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Personalidad:</label>
+                            <select id="botPersonality" style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; margin-bottom: 15px;">
+                                <option value="profesional">🎯 Profesional</option>
+                                <option value="amigable">😊 Amigable</option>
+                                <option value="academico">📚 Académico</option>
+                                <option value="creativo">🎨 Creativo</option>
+                                <option value="tecnico">⚙️ Técnico</option>
+                                <option value="divertido">🎉 Divertido</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Configuración Avanzada -->
+                        <div>
+                            <h3 style="color: #5865f2; margin-bottom: 15px;">⚙️ Configuración Avanzada</h3>
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Tipo de Bot:</label>
+                            <select id="botType" style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; margin-bottom: 15px;" onchange="updateBotTypeDescription()">
+                                <option value="basico">🔤 Básico - Respuestas predefinidas</option>
+                                <option value="reglas">📋 Reglas - Lógica condicional</option>
+                                <option value="ia">🧠 IA - Inteligencia artificial</option>
+                            </select>
+                            
+                            <div id="botTypeDescription" style="background: #f2f3f5; padding: 10px; border-radius: 6px; font-size: 14px; margin-bottom: 15px;">
+                                Bot básico con respuestas predefinidas para comandos específicos.
+                            </div>
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Alcance:</label>
+                            <select id="botScope" style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; margin-bottom: 15px;">
+                                <option value="privado">👤 Solo yo</option>
+                                <option value="servidor">🏛️ Todo el servidor</option>
+                                <option value="canal">📢 Canal específico</option>
+                            </select>
+                            
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Modelo IA (si aplica):</label>
+                            <select id="botModel" style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; margin-bottom: 15px;">
+                                <option value="llama2">🦙 Llama 2 (Recomendado)</option>
+                                <option value="codellama">💻 Code Llama (Para programación)</option>
+                                <option value="mistral">⚡ Mistral (Rápido)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Comandos y Respuestas -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #5865f2; margin-bottom: 15px;">💬 Comandos y Respuestas</h3>
+                        
+                        <div id="commandsList">
+                            <div class="command-item" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                                <input type="text" placeholder="/comando" style="width: 150px; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                                <input type="text" placeholder="Respuesta del bot..." style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                                <button onclick="removeCommand(this)" style="background: #f14668; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">×</button>
+                            </div>
+                        </div>
+                        
+                        <button onclick="addCommand()" style="background: #3ba55c; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                            <i data-lucide="plus" width="16" height="16"></i> Añadir Comando
+                        </button>
+                    </div>
+                    
+                    <!-- Configuración de IA -->
+                    <div id="iaConfig" style="display: none; margin-bottom: 20px;">
+                        <h3 style="color: #5865f2; margin-bottom: 15px;">🧠 Configuración de IA</h3>
+                        
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Instrucciones del Sistema:</label>
+                        <textarea id="systemPrompt" placeholder="Eres un asistente especializado en... Siempre responde de manera..." style="width: 100%; padding: 8px; border: 2px solid #e3e5e8; border-radius: 6px; height: 100px; margin-bottom: 15px; resize: vertical;"></textarea>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Temperatura:</label>
+                                <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" style="width: 100%;">
+                                <div style="font-size: 12px; color: #666;">Creatividad: <span id="tempValue">0.7</span></div>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Max Tokens:</label>
+                                <input type="number" id="maxTokens" value="150" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div style="font-size: 12px; color: #666;">Longitud de respuesta</div>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Memoria:</label>
+                                <input type="number" id="contextWindow" value="10" style="width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div style="font-size: 12px; color: #666;">Mensajes recordados</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview del Bot -->
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="color: #5865f2; margin-bottom: 10px;">👀 Vista Previa</h3>
+                        <div id="botPreview" style="background: white; padding: 12px; border-radius: 6px; border: 1px solid #e3e5e8;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #5865f2 0%, #3b45c4 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    🤖
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #2c2f33;" id="previewName">Mi Bot Personal</div>
+                                    <div style="font-size: 12px; color: #72767d;" id="previewType">Bot Básico</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; color: #4f5660;" id="previewDescription">
+                                Este bot responderá a comandos específicos...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de Acción -->
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="testBot()" style="background: #faa61a; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            🧪 Probar Bot
+                        </button>
+                        <button onclick="saveBot()" style="background: #3ba55c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            💾 Crear Bot
+                        </button>
+                        <button onclick="closeCreateBotModal()" style="background: #72767d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            ❌ Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Control de IA -->
+    <div class="ai-control-panel" id="aiControlPanel" style="display: none;">
+        <div class="ai-panel-content">
+            <div class="ai-panel-header">
+                <div class="ai-panel-title">
+                    <i data-lucide="brain-circuit" width="24" height="24"></i>
+                    <span>Panel de Control IA</span>
+                </div>
+                <button onclick="closeAIPanel()" class="ai-panel-close">×</button>
+            </div>
+
+            <div class="ai-panel-body">
+                <!-- Estado General -->
+                <div class="ai-section">
+                    <h3>🔍 Estado General</h3>
+                    <div class="ai-status-grid">
+                        <div class="ai-status-card">
+                            <div class="status-label">LocalAI</div>
+                            <div class="status-value" id="localaiStatus">🔴 Desconectado</div>
+                        </div>
+                        <div class="ai-status-card">
+                            <div class="status-label">Modelo Activo</div>
+                            <div class="status-value" id="currentModel">-</div>
+                        </div>
+                        <div class="ai-status-card">
+                            <div class="status-label">Conversaciones</div>
+                            <div class="status-value" id="conversationCount">0</div>
+                        </div>
+                        <div class="ai-status-card">
+                            <div class="status-label">Bots Activos</div>
+                            <div class="status-value" id="activeBots">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuración de Modelos -->
+                <div class="ai-section">
+                    <h3>🧠 Modelos Disponibles</h3>
+                    <div class="model-list" id="modelList">
+                        <div class="model-item loading">
+                            <i data-lucide="loader" width="16" height="16" class="spinning"></i>
+                            Cargando modelos...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="ai-section">
+                    <h3>⚡ Acciones Rápidas</h3>
+                    <div class="ai-actions">
+                        <button class="ai-action-btn" onclick="checkAIConnection()">
+                            <i data-lucide="refresh-cw" width="16" height="16"></i>
+                            Verificar Conexión
+                        </button>
+                        <button class="ai-action-btn" onclick="installLocalAI()">
+                            <i data-lucide="download" width="16" height="16"></i>
+                            Instalar LocalAI
+                        </button>
+                        <button class="ai-action-btn" onclick="clearAIHistory()">
+                            <i data-lucide="trash-2" width="16" height="16"></i>
+                            Limpiar Historial
+                        </button>
+                        <button class="ai-action-btn" onclick="showAILogs()">
+                            <i data-lucide="file-text" width="16" height="16"></i>
+                            Ver Logs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="ai-section">
+                    <h3>📊 Estadísticas de Uso</h3>
+                    <div class="ai-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Mensajes procesados:</span>
+                            <span class="stat-value" id="processedMessages">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tiempo promedio:</span>
+                            <span class="stat-value" id="averageResponseTime">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tasa de éxito:</span>
+                            <span class="stat-value" id="successRate">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de notificación -->
+    <div class="notification-toast" id="notificationToast">
+        <i data-lucide="check-circle" width="20" height="20" style="color: #3ba55c;"></i>
+        <span id="toastMessage">¡Funcionalidad ejecutada correctamente!</span>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/agora-icons.js"></script>
+    <script>
+        // ===== VARIABLES GLOBALES =====
+        let currentMessages = [];
+        let isTyping = false;
+        let currentTab = 'members';
+        let personalBots = []; // Array para almacenar bots personales creados
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar iconos
+            lucide.createIcons();
+            
+            // Verificar modo desarrollo
+            checkDevelopmentMode();
+            
+            // Configurar drag & drop
+            setupDragAndDrop();
+            
+            // Cargar bots personales guardados
+            loadPersonalBots();
+            
+            // Simular actividad
+            setTimeout(() => {
+                simulateNewMessage();
+            }, 5000);
+        });
+
+        function checkDevelopmentMode() {
+            if (localStorage.getItem('developmentMode') === 'true') {
+                // Añadir indicador visual de modo desarrollo
+                const devIndicator = document.createElement('div');
+                devIndicator.id = 'devModeIndicator';
+                devIndicator.style.cssText = `
+                    position: fixed;
+                    top: 10px;
+                    left: 80px;
+                    background: linear-gradient(135deg, #faa61a 0%, #f47068 100%);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    z-index: 1000;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                `;
+                devIndicator.innerHTML = '🔧 MODO DESARROLLO';
+                document.body.appendChild(devIndicator);
+                
+                console.log('🔧 Modo desarrollo activo en la plataforma');
+            }
+        }
+
+        // ===== FUNCIONES DE MENSAJES CON IA REAL =====
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Añadir mensaje del usuario
+            addMessage('Tú', message, 'user');
+            input.value = '';
+            
+            // Obtener bot activo o usar asistente por defecto
+            const activeBot = getActiveBot();
+            
+            // Mostrar indicador de escritura
+            showTypingIndicator();
+            
+            try {
+                // Usar LocalAI real si está disponible
+                if (window.agoraAI && activeBot) {
+                    const userName = getCurrentUser()?.name || 'Usuario';
+                    const response = await window.agoraAI.chatWithBot(activeBot, message, userName);
+                    
+                    hideTypingIndicator();
+                    
+                    if (response.success) {
+                        // Mostrar respuesta con metadatos de IA
+                        addAIMessage(activeBot.name, response.response, response.metadata);
+                    } else {
+                        addMessage('Sistema', '❌ Error al procesar mensaje con IA', 'system');
+                    }
+                } else {
+                    // Fallback a respuesta simulada
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('Asistente Básico', getBotResponse(message), 'bot');
+                    }, 1500);
+                }
+                
+            } catch (error) {
+                console.error('❌ Error enviando mensaje:', error);
+                hideTypingIndicator();
+                addMessage('Sistema', '❌ Error de conexión. Intenta de nuevo.', 'system');
+            }
+        }
+
+        function getActiveBot() {
+            // Obtener bot actualmente seleccionado o usar uno por defecto
+            const bots = JSON.parse(localStorage.getItem('agora_bots') || '[]');
+            
+            if (bots.length > 0) {
+                // Usar el primer bot como activo, o implementar selección
+                return {
+                    id: bots[0].id || '1',
+                    name: bots[0].name || 'Asistente IA',
+                    personality: bots[0].personality || 'Eres un asistente inteligente en la plataforma Ágora',
+                    type: bots[0].type || 'general',
+                    tone: bots[0].tone || 'amigable'
+                };
+            }
+            
+            // Bot por defecto
+            return {
+                id: 'default',
+                name: 'Asistente IA',
+                personality: 'Eres un asistente inteligente y útil en la plataforma de comunicación Ágora. Ayudas a los usuarios con sus consultas de manera amigable y eficiente.',
+                type: 'general',
+                tone: 'amigable'
+            };
+        }
+
+        function addMessage(author, text, type = 'user') {
+            const messagesArea = document.getElementById('messagesArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'bot' ? 'bot-message' : type === 'system' ? 'system-message' : ''}`;
+            
+            let avatar;
+            if (type === 'bot') {
+                avatar = '🤖';
+            } else if (type === 'system') {
+                avatar = '⚙️';
+            } else {
+                avatar = author.substring(0, 2).toUpperCase();
+            }
+            
+            const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${author}</span>
+                        <span class="message-timestamp">Hoy a las ${time}</span>
+                    </div>
+                    <div class="message-text">${text}</div>
+                </div>
+            `;
+            
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function addAIMessage(botName, text, metadata = {}) {
+            const messagesArea = document.getElementById('messagesArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message ai-powered';
+            
+            const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const aiIndicator = metadata.ai_powered ? '🧠' : '🤖';
+            const responseTime = metadata.response_time ? `(${(metadata.response_time * 1000).toFixed(0)}ms)` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${aiIndicator}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${botName}</span>
+                        <span class="message-timestamp">Hoy a las ${time}</span>
+                        ${metadata.ai_powered ? '<span class="ai-badge">IA</span>' : ''}
+                        ${responseTime ? `<span class="response-time">${responseTime}</span>` : ''}
+                    </div>
+                    <div class="message-text">${text}</div>
+                    ${metadata.model_used ? `<div class="message-metadata">Modelo: ${metadata.model_used}</div>` : ''}
+                </div>
+            `;
+            
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            const responses = {
+                'ayuda': '🤖 Aquí tienes algunas cosas que puedo hacer:\n• Responder preguntas sobre el TFG\n• Generar documentos automáticamente\n• Analizar archivos subidos\n• Crear resúmenes inteligentes\n• Asistir en videollamadas',
+                'bot': '¡Hola! Soy tu asistente inteligente integrado. Combino las mejores características de ChatGPT con funcionalidades específicas para tu TFG.',
+                'default': '🎯 Interesante pregunta. Basándome en el contexto de tu TFG sobre plataformas de comunicación, puedo ayudarte a desarrollar esa idea más profundamente.'
+            };
+            
+            for (let keyword in responses) {
+                if (message.toLowerCase().includes(keyword)) {
+                    return responses[keyword];
+                }
+            }
+            
+            return responses['default'];
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleInput(event) {
+            // Auto-resize textarea
+            event.target.style.height = 'auto';
+            event.target.style.height = event.target.scrollHeight + 'px';
+        }
+
+        // ===== FUNCIONES DE ARCHIVOS =====
+        function triggerFileUpload() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                const fileInfo = `📎 **${file.name}** (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                addMessage('Tú', fileInfo, 'user');
+                
+                // Simular procesamiento del archivo por IA
+                setTimeout(() => {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('Asistente IA', `✅ He procesado el archivo "${file.name}". ${getFileAnalysis(file)}`, 'bot');
+                    }, 2000);
+                }, 1000);
+            }
+        }
+
+        function getFileAnalysis(file) {
+            if (file.type.startsWith('image/')) {
+                return 'He analizado la imagen y puedo ayudarte a describirla, extraer texto o generar contenido relacionado.';
+            } else if (file.type.includes('pdf') || file.type.includes('document')) {
+                return 'He leído el documento y puedo crear resúmenes, extraer información clave o responder preguntas sobre su contenido.';
+            } else if (file.type.startsWith('video/')) {
+                return 'He procesado el video y puedo generar transcripciones, resúmenes o análisis de contenido.';
+            }
+            return 'He analizado el archivo y está listo para ser procesado según tus necesidades.';
+        }
+
+        function setupDragAndDrop() {
+            const dropArea = document.getElementById('fileUploadArea');
+            const messagesArea = document.getElementById('messagesArea');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                messagesArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                messagesArea.addEventListener(eventName, () => {
+                    dropArea.style.display = 'block';
+                    dropArea.classList.add('dragover');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                messagesArea.addEventListener(eventName, () => {
+                    dropArea.style.display = 'none';
+                    dropArea.classList.remove('dragover');
+                });
+            });
+
+            messagesArea.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                const fileInput = document.getElementById('fileInput');
+                fileInput.files = files;
+                handleFileUpload({ target: { files: files } });
+            });
+        }
+
+        // ===== FUNCIONES DE LLAMADAS =====
+        function startVoiceCall() {
+            showNotification('🔊 Iniciando llamada de voz...');
+            showFeatureModal('voice');
+        }
+
+        function startVideoCall() {
+            showNotification('📹 Iniciando videollamada...');
+            showFeatureModal('video');
+        }
+
+        // ===== FUNCIONES DE UI =====
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Actualizar tabs
+            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.panel-tab:nth-child(${tab === 'members' ? '1' : '2'})`).classList.add('active');
+            
+            // Mostrar contenido correcto
+            document.getElementById('membersPanel').style.display = tab === 'members' ? 'block' : 'none';
+            document.getElementById('filesPanel').style.display = tab === 'files' ? 'block' : 'none';
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('channelsSidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        function showNotification(message) {
+            const toast = document.getElementById('notificationToast');
+            const messageSpan = document.getElementById('toastMessage');
+            messageSpan.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function showFeatureModal(feature) {
+            const modal = document.getElementById('featureModal');
+            const content = document.getElementById('modalContent');
+            
+            const features = {
+                voice: {
+                    title: '🔊 Llamada de Voz',
+                    content: `
+                        <p>Funcionalidad de llamadas de voz integrada con:</p>
+                        <ul style="margin: 16px 0; padding-left: 20px;">
+                            <li>📞 <strong>WebRTC</strong> - Conexión P2P de alta calidad</li>
+                            <li>🎤 <strong>Control de audio</strong> - Mute, volumen, filtros</li>
+                            <li>👥 <strong>Multiples participantes</strong> - Hasta 50 personas</li>
+                            <li>🔇 <strong>Supresión de ruido</strong> - IA integrada</li>
+                            <li>📱 <strong>Compatibilidad móvil</strong> - Apps nativas</li>
+                        </ul>
+                        <button class="button is-agora-primary" onclick="closeModal()">Cerrar</button>
+                    `
+                },
+                video: {
+                    title: '📹 Videollamada',
+                    content: `
+                        <p>Sistema de videollamadas completo estilo Zoom:</p>
+                        <ul style="margin: 16px 0; padding-left: 20px;">
+                            <li>🎥 <strong>Video HD</strong> - Hasta 1080p con adaptación automática</li>
+                            <li>📺 <strong>Compartir pantalla</strong> - Escritorio completo o ventanas</li>
+                            <li>🏠 <strong>Salas de espera</strong> - Control de acceso</li>
+                            <li>🎨 <strong>Filtros virtuales</strong> - Fondos y efectos</li>
+                            <li>📊 <strong>Grabación</strong> - Almacenamiento automático</li>
+                            <li>💬 <strong>Chat integrado</strong> - Mensajes durante llamada</li>
+                        </ul>
+                        <button class="button is-agora-primary" onclick="closeModal()">Cerrar</button>
+                    `
+                }
+            };
+            
+            content.innerHTML = features[feature].content;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('featureModal').style.display = 'none';
+        }
+
+        function showFileExplorer() {
+            showFeatureModal('files');
+            document.getElementById('modalContent').innerHTML = `
+                <p><strong>💾 Sistema de Archivos Ágora</strong></p>
+                <p>Funcionalidades estilo Google Drive integradas:</p>
+                <ul style="margin: 16px 0; padding-left: 20px;">
+                    <li>📁 <strong>Carpetas organizadas</strong> - Jerarquía completa</li>
+                    <li>🔄 <strong>Sincronización</strong> - Multi-dispositivo</li>
+                    <li>🤝 <strong>Colaboración</strong> - Edición simultánea</li>
+                    <li>🔒 <strong>Permisos granulares</strong> - Control de acceso</li>
+                    <li>🔍 <strong>Búsqueda inteligente</strong> - Contenido y metadatos</li>
+                    <li>📱 <strong>Acceso móvil</strong> - Apps nativas</li>
+                </ul>
+                <button class="button is-agora-primary" onclick="closeModal()">Cerrar</button>
+            `;
+        }
+
+        function previewFile(type) {
+            const previews = {
+                doc: 'Vista previa del documento PDF con resaltado de contenido relevante y herramientas de anotación.',
+                image: 'Visualizador de imágenes con herramientas de edición básica y reconocimiento de texto IA.',
+                video: 'Reproductor con controles avanzados, transcripción automática y marcadores inteligentes.'
+            };
+            
+            showNotification(`📄 ${previews[type]}`);
+        }
+
+        function simulateNewMessage() {
+            addMessage('Sistema IA', '💡 Tip: Escribe "ayuda" para ver todas las funcionalidades disponibles. ¡Experimenta con la interfaz!', 'bot');
+        }
+
+        // ===== LISTENERS ADICIONALES =====
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.server-icon:not(.active)')) {
+                // Cambiar servidor
+                document.querySelectorAll('.server-icon').forEach(icon => icon.classList.remove('active'));
+                e.target.closest('.server-icon').classList.add('active');
+                showNotification('🔄 Cambiando de servidor...');
+            }
+            
+            if (e.target.closest('.channel-item:not(.active)')) {
+                // Cambiar canal
+                document.querySelectorAll('.channel-item').forEach(item => item.classList.remove('active'));
+                e.target.closest('.channel-item').classList.add('active');
+                
+                const channelName = e.target.closest('.channel-item').querySelector('.channel-name').textContent;
+                showNotification(`📢 Conectado al canal #${channelName}`);
+            }
+        });
+
+        // Cerrar modal al hacer click fuera
+        document.getElementById('featureModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('createBotModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCreateBotModal();
+            }
+        });
+
+        // ===== FUNCIONES DE GESTIÓN DE BOTS PERSONALES =====
+
+        function showCreateBotModal() {
+            const modal = document.getElementById('createBotModal');
+            modal.style.display = 'flex';
+            
+            // Resetear formulario
+            document.getElementById('botName').value = '';
+            document.getElementById('botDescription').value = '';
+            document.getElementById('botPersonality').value = 'profesional';
+            document.getElementById('botType').value = 'basico';
+            document.getElementById('botScope').value = 'privado';
+            document.getElementById('botModel').value = 'llama2';
+            
+            // Actualizar preview
+            updateBotPreview();
+            
+            // Configurar listeners para preview en tiempo real
+            setupPreviewListeners();
+            
+            lucide.createIcons();
+        }
+
+        function closeCreateBotModal() {
+            document.getElementById('createBotModal').style.display = 'none';
+        }
+
+        function setupPreviewListeners() {
+            const inputs = ['botName', 'botDescription', 'botPersonality', 'botType'];
+            inputs.forEach(inputId => {
+                const element = document.getElementById(inputId);
+                if (element) {
+                    element.addEventListener('input', updateBotPreview);
+                    element.addEventListener('change', updateBotPreview);
+                }
+            });
+        }
+
+        function updateBotPreview() {
+            const name = document.getElementById('botName').value || 'Mi Bot Personal';
+            const description = document.getElementById('botDescription').value || 'Este bot responderá a comandos específicos...';
+            const type = document.getElementById('botType').value;
+            
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewDescription').textContent = description;
+            
+            const typeLabels = {
+                'basico': 'Bot Básico',
+                'reglas': 'Bot con Reglas',
+                'ia': 'Bot con IA'
+            };
+            
+            document.getElementById('previewType').textContent = typeLabels[type] || 'Bot Básico';
+        }
+
+        function updateBotTypeDescription() {
+            const type = document.getElementById('botType').value;
+            const descriptions = {
+                'basico': 'Bot básico con respuestas predefinidas para comandos específicos. Ideal para FAQs y comandos simples.',
+                'reglas': 'Bot con lógica condicional avanzada. Puede tomar decisiones basadas en el contexto y realizar acciones complejas.',
+                'ia': 'Bot potenciado por inteligencia artificial. Respuestas naturales y conversacionales usando LocalAI.'
+            };
+            
+            document.getElementById('botTypeDescription').textContent = descriptions[type];
+            
+            // Mostrar/ocultar configuración de IA
+            const iaConfig = document.getElementById('iaConfig');
+            iaConfig.style.display = type === 'ia' ? 'block' : 'none';
+            
+            updateBotPreview();
+        }
+
+        function addCommand() {
+            const commandsList = document.getElementById('commandsList');
+            const newCommand = document.createElement('div');
+            newCommand.className = 'command-item';
+            newCommand.style = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: center;';
+            newCommand.innerHTML = `
+                <input type="text" placeholder="/comando" style="width: 150px; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                <input type="text" placeholder="Respuesta del bot..." style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                <button onclick="removeCommand(this)" style="background: #f14668; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">×</button>
+            `;
+            commandsList.appendChild(newCommand);
+        }
+
+        function removeCommand(button) {
+            button.parentElement.remove();
+        }
+
+        function testBot() {
+            const botData = collectBotData();
+            
+            if (!botData.nombre) {
+                showNotification('❌ Por favor, ingresa un nombre para el bot');
+                return;
+            }
+            
+            // Crear mensaje de prueba
+            addMessage('Tú', `/test Hola ${botData.nombre}`, 'user');
+            
+            setTimeout(() => {
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const testResponse = generateTestResponse(botData);
+                    addMessage(botData.nombre, testResponse, 'bot');
+                }, 1500);
+            }, 500);
+            
+            showNotification(`🧪 Probando bot "${botData.nombre}"...`);
+        }
+
+        function generateTestResponse(botData) {
+            const responses = {
+                'profesional': 'Hola. Soy tu asistente profesional. ¿En qué puedo ayudarte hoy?',
+                'amigable': '¡Hola! 😊 ¡Qué gusto conocerte! Estoy aquí para ayudarte en lo que necesites.',
+                'academico': 'Saludos. Soy tu asistente académico especializado. ¿Tienes alguna consulta de estudio?',
+                'creativo': '¡Hola creativo! 🎨 ¿Listo para crear algo increíble juntos?',
+                'tecnico': 'Hola. Sistema iniciado correctamente. ¿Qué tarea técnica podemos resolver?',
+                'divertido': '¡Holaaa! 🎉 ¡Tu nuevo amigo bot está aquí! ¿Nos divertimos un poco?'
+            };
+            
+            return responses[botData.personalidad] || 'Hola, soy tu nuevo bot personal. ¡Listo para ayudarte!';
+        }
+
+        function collectBotData() {
+            // Recopilar comandos
+            const commands = [];
+            const commandItems = document.querySelectorAll('.command-item');
+            commandItems.forEach(item => {
+                const commandInput = item.querySelector('input[placeholder="/comando"]');
+                const responseInput = item.querySelector('input[placeholder="Respuesta del bot..."]');
+                if (commandInput && responseInput && commandInput.value && responseInput.value) {
+                    commands.push({
+                        comando: commandInput.value,
+                        respuesta: responseInput.value
+                    });
+                }
+            });
+            
+            return {
+                nombre: document.getElementById('botName').value,
+                descripcion: document.getElementById('botDescription').value,
+                personalidad: document.getElementById('botPersonality').value,
+                tipo: document.getElementById('botType').value,
+                alcance: document.getElementById('botScope').value,
+                modelo: document.getElementById('botModel').value,
+                comandos: commands,
+                systemPrompt: document.getElementById('systemPrompt') ? document.getElementById('systemPrompt').value : '',
+                temperature: document.getElementById('temperature') ? parseFloat(document.getElementById('temperature').value) : 0.7,
+                maxTokens: document.getElementById('maxTokens') ? parseInt(document.getElementById('maxTokens').value) : 150,
+                contextWindow: document.getElementById('contextWindow') ? parseInt(document.getElementById('contextWindow').value) : 10,
+                fechaCreacion: new Date().toISOString()
+            };
+        }
+
+        function saveBot() {
+            const botData = collectBotData();
+            
+            // Validaciones
+            if (!botData.nombre.trim()) {
+                showNotification('❌ El nombre del bot es obligatorio');
+                return;
+            }
+            
+            if (personalBots.some(bot => bot.nombre === botData.nombre)) {
+                showNotification('❌ Ya existe un bot con ese nombre');
+                return;
+            }
+            
+            // Generar ID único
+            botData.id = 'bot_' + Date.now();
+            
+            // Añadir a la lista de bots personales
+            personalBots.push(botData);
+            
+            // Guardar en localStorage
+            localStorage.setItem('agoraBots', JSON.stringify(personalBots));
+            
+            // Actualizar UI
+            renderPersonalBots();
+            
+            // Cerrar modal
+            closeCreateBotModal();
+            
+            // Notificar éxito
+            showNotification(`✅ Bot "${botData.nombre}" creado correctamente`);
+            
+            // Añadir mensaje de bienvenida del nuevo bot
+            setTimeout(() => {
+                const welcomeMessage = `¡Hola! Soy ${botData.nombre}, tu nuevo asistente personal. ${botData.descripcion}`;
+                addMessage(botData.nombre, welcomeMessage, 'bot');
+            }, 1000);
+        }
+
+        function loadPersonalBots() {
+            const savedBots = localStorage.getItem('agoraBots');
+            if (savedBots) {
+                try {
+                    personalBots = JSON.parse(savedBots);
+                    renderPersonalBots();
+                } catch (error) {
+                    console.error('Error loading personal bots:', error);
+                    personalBots = [];
+                }
+            }
+        }
+
+        function renderPersonalBots() {
+            const container = document.getElementById('myCustomBots');
+            container.innerHTML = '';
+            
+            if (personalBots.length === 0) {
+                container.innerHTML = `
+                    <div style="color: #72767d; font-style: italic; padding: 8px; text-align: center; font-size: 14px;">
+                        No tienes bots personales aún
+                    </div>
+                `;
+                return;
+            }
+            
+            personalBots.forEach(bot => {
+                const botElement = document.createElement('div');
+                botElement.className = 'channel-item';
+                botElement.innerHTML = `
+                    <i data-lucide="bot" class="channel-icon" width="16" height="16" style="color: #5865f2;"></i>
+                    <span class="channel-name">${bot.nombre}</span>
+                    <div style="margin-left: auto; display: flex; gap: 5px;">
+                        <i data-lucide="settings" width="14" height="14" style="color: #72767d; cursor: pointer;" 
+                           onclick="editBot('${bot.id}')" title="Configurar"></i>
+                        <i data-lucide="trash-2" width="14" height="14" style="color: #f14668; cursor: pointer;" 
+                           onclick="deleteBot('${bot.id}')" title="Eliminar"></i>
+                    </div>
+                `;
+                
+                // Añadir click para activar bot
+                botElement.addEventListener('click', (e) => {
+                    if (!e.target.closest('[data-lucide]')) {
+                        activateBot(bot);
+                    }
+                });
+                
+                container.appendChild(botElement);
+            });
+            
+            lucide.createIcons();
+        }
+
+        function activateBot(bot) {
+            showNotification(`🤖 Bot "${bot.nombre}" activado`);
+            
+            // Simular respuesta del bot personal
+            setTimeout(() => {
+                const message = `¡Hola! Soy ${bot.nombre}. ${bot.descripcion || 'Estoy listo para ayudarte.'}`;
+                addMessage(bot.nombre, message, 'bot');
+            }, 800);
+        }
+
+        function editBot(botId) {
+            const bot = personalBots.find(b => b.id === botId);
+            if (!bot) return;
+            
+            // Cargar datos del bot en el formulario
+            showCreateBotModal();
+            
+            document.getElementById('botName').value = bot.nombre;
+            document.getElementById('botDescription').value = bot.descripcion || '';
+            document.getElementById('botPersonality').value = bot.personalidad || 'profesional';
+            document.getElementById('botType').value = bot.tipo || 'basico';
+            document.getElementById('botScope').value = bot.alcance || 'privado';
+            document.getElementById('botModel').value = bot.modelo || 'llama2';
+            
+            // Cambiar el botón de guardar para actualizar
+            const saveButton = document.querySelector('button[onclick="saveBot()"]');
+            if (saveButton) {
+                saveButton.textContent = '📝 Actualizar Bot';
+                saveButton.setAttribute('onclick', `updateBot('${botId}')`);
+            }
+            
+            updateBotPreview();
+            updateBotTypeDescription();
+        }
+
+        function updateBot(botId) {
+            const botIndex = personalBots.findIndex(b => b.id === botId);
+            if (botIndex === -1) return;
+            
+            const updatedData = collectBotData();
+            updatedData.id = botId; // Mantener el ID original
+            updatedData.fechaActualizacion = new Date().toISOString();
+            
+            // Actualizar en el array
+            personalBots[botIndex] = updatedData;
+            
+            // Guardar en localStorage
+            localStorage.setItem('agoraBots', JSON.stringify(personalBots));
+            
+            // Actualizar UI
+            renderPersonalBots();
+            closeCreateBotModal();
+            
+            showNotification(`✅ Bot "${updatedData.nombre}" actualizado`);
+            
+            // Restaurar botón original
+            const saveButton = document.querySelector('button[onclick^="updateBot"]');
+            if (saveButton) {
+                saveButton.textContent = '💾 Crear Bot';
+                saveButton.setAttribute('onclick', 'saveBot()');
+            }
+        }
+
+        function deleteBot(botId) {
+            const bot = personalBots.find(b => b.id === botId);
+            if (!bot) return;
+            
+            if (confirm(`¿Estás seguro de que quieres eliminar el bot "${bot.nombre}"?`)) {
+                personalBots = personalBots.filter(b => b.id !== botId);
+                localStorage.setItem('agoraBots', JSON.stringify(personalBots));
+                renderPersonalBots();
+                showNotification(`🗑️ Bot "${bot.nombre}" eliminado`);
+            }
+        }
+
+        function showBotsManager() {
+            showFeatureModal('bots-manager');
+            document.getElementById('modalContent').innerHTML = `
+                <div style="max-height: 500px; overflow-y: auto;">
+                    <h3 style="color: #5865f2; margin-bottom: 15px;">🤖 Gestor de Bots Personales</h3>
+                    
+                    <div style="background: #f2f3f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>📊 Estadísticas</h4>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li><strong>Bots creados:</strong> ${personalBots.length}</li>
+                            <li><strong>Bots activos:</strong> ${personalBots.filter(b => b.tipo === 'ia').length}</li>
+                            <li><strong>Comandos totales:</strong> ${personalBots.reduce((acc, bot) => acc + (bot.comandos?.length || 0), 0)}</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>🎛️ Configuración Global de Bots</h4>
+                    <div style="margin: 15px 0;">
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                            <input type="checkbox" checked> Permitir bots en este servidor
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                            <input type="checkbox" checked> Notificaciones de bots
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                            <input type="checkbox"> Modo debug para bots IA
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="showCreateBotModal(); closeModal();" class="button is-agora-primary">
+                            🤖 Crear Nuevo Bot
+                        </button>
+                        <button onclick="exportBots()" class="button" style="background: #72767d; color: white;">
+                            📤 Exportar Bots
+                        </button>
+                        <button onclick="importBots()" class="button" style="background: #72767d; color: white;">
+                            📥 Importar Bots
+                        </button>
+                        <button onclick="closeModal()" class="button" style="background: #72767d; color: white;">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function exportBots() {
+            if (personalBots.length === 0) {
+                showNotification('❌ No tienes bots para exportar');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(personalBots, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `agora-bots-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('📤 Bots exportados correctamente');
+        }
+
+        function importBots() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedBots = JSON.parse(e.target.result);
+                        if (Array.isArray(importedBots)) {
+                            personalBots = [...personalBots, ...importedBots];
+                            localStorage.setItem('agoraBots', JSON.stringify(personalBots));
+                            renderPersonalBots();
+                            showNotification(`📥 ${importedBots.length} bots importados correctamente`);
+                        } else {
+                            showNotification('❌ Archivo de bots inválido');
+                        }
+                    } catch (error) {
+                        showNotification('❌ Error al importar bots');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Configurar slider de temperatura
+        document.addEventListener('DOMContentLoaded', function() {
+            const tempSlider = document.getElementById('temperature');
+            const tempValue = document.getElementById('tempValue');
+            
+            if (tempSlider && tempValue) {
+                tempSlider.addEventListener('input', function() {
+                    tempValue.textContent = this.value;
+                });
+            }
+            
+            // Inicializar panel de IA
+            initAIPanel();
+        });
+
+        // ===== FUNCIONES DEL PANEL DE IA =====
+        function getCurrentUser() {
+            const user = localStorage.getItem('agora_user');
+            return user ? JSON.parse(user) : null;
+        }
+
+        async function initAIPanel() {
+            console.log('🧠 Inicializando panel de control IA...');
+            
+            // Actualizar estado de IA cada 5 segundos
+            setInterval(updateAIStatus, 5000);
+            
+            // Actualización inicial
+            await updateAIStatus();
+        }
+
+        async function updateAIStatus() {
+            if (!window.agoraAI) return;
+            
+            const statusInfo = window.agoraAI.getAIStatusInfo();
+            
+            // Actualizar indicador en el header
+            const indicator = document.getElementById('aiStatusIndicator');
+            const statusDot = indicator?.querySelector('.ai-status-dot');
+            
+            if (statusDot) {
+                statusDot.className = `ai-status-dot ${statusInfo.available ? 'online' : 'offline'}`;
+            }
+            
+            // Actualizar panel si está abierto
+            const panel = document.getElementById('aiControlPanel');
+            if (panel && panel.classList.contains('show')) {
+                await refreshAIPanel();
+            }
+        }
+
+        async function refreshAIPanel() {
+            if (!window.agoraAI) return;
+            
+            try {
+                const statusInfo = window.agoraAI.getAIStatusInfo();
+                const models = await window.agoraAI.getAvailableModels();
+                const bots = JSON.parse(localStorage.getItem('agora_bots') || '[]');
+                
+                // Actualizar estado general
+                document.getElementById('localaiStatus').textContent = statusInfo.status;
+                document.getElementById('currentModel').textContent = statusInfo.model;
+                document.getElementById('conversationCount').textContent = statusInfo.conversations;
+                document.getElementById('activeBots').textContent = bots.length;
+                
+                // Actualizar lista de modelos
+                const modelList = document.getElementById('modelList');
+                if (models.models && models.models.length > 0) {
+                    modelList.innerHTML = '';
+                    models.models.forEach(model => {
+                        const modelDiv = document.createElement('div');
+                        modelDiv.className = `model-item ${model.id === statusInfo.model ? 'active' : ''}`;
+                        modelDiv.innerHTML = `
+                            <i data-lucide="brain" width="16" height="16"></i>
+                            <div>
+                                <div style="font-weight: 600;">${model.id}</div>
+                                <div style="font-size: 12px; color: #72767d;">${model.object || 'Modelo'}</div>
+                            </div>
+                        `;
+                        modelDiv.onclick = () => changeModel(model.id);
+                        modelList.appendChild(modelDiv);
+                    });
+                } else {
+                    modelList.innerHTML = `
+                        <div class="model-item">
+                            <i data-lucide="alert-circle" width="16" height="16"></i>
+                            No hay modelos disponibles
+                        </div>
+                    `;
+                }
+                
+                // Refrescar iconos de Lucide
+                lucide.createIcons();
+                
+            } catch (error) {
+                console.error('❌ Error actualizando panel IA:', error);
+            }
+        }
+
+        function toggleAIPanel() {
+            const panel = document.getElementById('aiControlPanel');
+            
+            if (panel.classList.contains('show')) {
+                closeAIPanel();
+            } else {
+                showAIPanel();
+            }
+        }
+
+        async function showAIPanel() {
+            const panel = document.getElementById('aiControlPanel');
+            panel.style.display = 'block';
+            
+            // Pequeño delay para la animación
+            setTimeout(() => {
+                panel.classList.add('show');
+            }, 10);
+            
+            // Refrescar datos del panel
+            await refreshAIPanel();
+        }
+
+        function closeAIPanel() {
+            const panel = document.getElementById('aiControlPanel');
+            panel.classList.remove('show');
+            
+            setTimeout(() => {
+                panel.style.display = 'none';
+            }, 300);
+        }
+
+        async function changeModel(modelId) {
+            if (!window.agoraAI) return;
+            
+            console.log(`🔄 Cambiando modelo a: ${modelId}`);
+            const success = await window.agoraAI.setModel(modelId);
+            
+            if (success) {
+                showNotification(`Modelo cambiado a: ${modelId}`, 'success');
+                await refreshAIPanel();
+            } else {
+                showNotification('Error cambiando modelo', 'error');
+            }
+        }
+
+        async function checkAIConnection() {
+            if (!window.agoraAI) {
+                showNotification('Servicio de IA no disponible', 'error');
+                return;
+            }
+            
+            console.log('🔍 Verificando conexión con LocalAI...');
+            await window.agoraAI.checkAIStatus();
+            await refreshAIPanel();
+            showNotification('Conexión verificada', 'success');
+        }
+
+        function installLocalAI() {
+            showNotification('Ejecuta setup-localai.bat en el Backend-Symfony', 'info');
+            
+            // Abrir ventana para descargar Docker si es necesario
+            if (confirm('¿Quieres abrir la página de Docker Desktop para instalarlo?')) {
+                window.open('https://www.docker.com/products/docker-desktop/', '_blank');
+            }
+        }
+
+        function clearAIHistory() {
+            if (!window.agoraAI) return;
+            
+            if (confirm('¿Estás seguro de que quieres limpiar todo el historial de conversaciones IA?')) {
+                window.agoraAI.clearConversationHistory();
+                showNotification('Historial de IA limpiado', 'success');
+                refreshAIPanel();
+            }
+        }
+
+        function showAILogs() {
+            console.log('📋 Logs del sistema IA:');
+            console.log('🧠 Estado actual:', window.agoraAI?.getAIStatusInfo());
+            console.log('💬 Conversaciones activas:', window.agoraAI?.conversationHistory.size);
+            
+            showNotification('Ver logs en la consola del navegador (F12)', 'info');
+        }
+
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('notificationToast');
+            const messageElement = document.getElementById('toastMessage');
+            
+            messageElement.textContent = message;
+            
+            // Cambiar color según tipo
+            const icon = toast.querySelector('i');
+            if (type === 'error') {
+                icon.style.color = '#f14668';
+            } else if (type === 'info') {
+                icon.style.color = '#3273dc';
+            } else {
+                icon.style.color = '#3ba55c';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -25,11 +25,18 @@
     </div>
 
     <!-- Usuarios de prueba -->
-    <div style="position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-size: 12px;">
-        <strong>Usuarios de prueba:</strong><br>
-        admin / admin123<br>
-        luis / 123456<br>
-        maria / 123456
+    <div id="devModeIndicator" style="position: fixed; top: 10px; right: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span style="font-size: 16px;">🔧</span>
+            <strong>MODO DESARROLLO</strong>
+        </div>
+        <div style="font-size: 12px; opacity: 0.9;">
+            <strong>Usuarios disponibles:</strong><br>
+            • admin / admin123<br>
+            • luis / 123456<br>
+            • maria / 123456<br>
+            • juan / 123456
+        </div>
     </div>
 
     <script src="js/api.js"></script>
@@ -66,6 +73,16 @@
                     console.log('📡 Resultado del login:', result);
                     
                     if (result.success) {
+                        // Mostrar mensaje de éxito
+                        errorDiv.style.color = '#3ba55c';
+                        errorDiv.style.display = 'block';
+                        
+                        if (result.mode === 'development') {
+                            errorDiv.innerHTML = '✅ Login exitoso en modo desarrollo';
+                        } else {
+                            errorDiv.innerHTML = '✅ Login exitoso';
+                        }
+                        
                         // Detectar de dónde viene el usuario
                         const urlParams = new URLSearchParams(window.location.search);
                         const redirectTo = urlParams.get('redirect') || 'index';
@@ -74,22 +91,23 @@
                         console.log('🔍 Parámetros URL:', window.location.search);
                         console.log('🔍 Redirect parameter:', redirectTo);
                         
-                        if (redirectTo === 'chats') {
-                            console.log('✅ Redirigiendo a Chats.html');
-                            alert(`¡Bienvenido ${result.user.nombre}! Accediendo a Ágora...`);
-                            window.location.href = 'Chats.html';
-                        } else if (redirectTo === 'test') {
-                            console.log('✅ Redirigiendo a test-redirect.html');
-                            alert(`¡Bienvenido ${result.user.nombre}! Regresando a test...`);
-                            window.location.href = 'test-redirect.html';
-                        } else {
-                            console.log('✅ Redirigiendo a index.html');
-                            alert(`¡Bienvenido ${result.user.nombre}! Regresando al inicio...`);
-                            window.location.href = 'index.html';
-                        }
+                        // Redirección con delay para mostrar el mensaje
+                        setTimeout(() => {
+                            if (redirectTo === 'chats' || redirectTo === 'platform') {
+                                console.log('✅ Redirigiendo a la plataforma principal Ágora');
+                                window.location.href = 'agora-platform-demo.html';
+                            } else if (redirectTo === 'test') {
+                                console.log('✅ Redirigiendo a test-redirect.html');
+                                window.location.href = 'test-redirect.html';
+                            } else {
+                                console.log('✅ Redirigiendo a index.html');
+                                window.location.href = 'index.html';
+                            }
+                        }, 1000);
                     } else {
                         console.error('❌ Login falló:', result.error);
-                        errorDiv.textContent = result.error;
+                        errorDiv.style.color = '#f14668';
+                        errorDiv.textContent = result.error || 'Error de login desconocido';
                         errorDiv.style.display = 'block';
                     }
                 } catch (error) {

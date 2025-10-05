@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigación UI/UX - Plataformas Modernas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .research-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .platform-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .platform-card:hover {
+            transform: translateY(-5px);
+        }
+        .platform-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .platform-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .feature-list li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+        .css-framework {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        .icon-resources {
+            background: rgba(33, 150, 243, 0.2);
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="research-container">
+        <h1>🎨 Investigación UI/UX - Plataformas Modernas para Ágora</h1>
+        
+        <div class="platform-grid">
+            <!-- Discord -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">🎮</span>
+                    <h3>Discord</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Sidebar con servidores (iconos circulares)</li>
+                    <li>Lista de canales jerárquica</li>
+                    <li>Chat con timestamps flotantes</li>
+                    <li>Tema oscuro elegante</li>
+                    <li>Notificaciones badge rojas</li>
+                    <li>Estados de usuario visibles</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> Grid layout, hover effects, color schemes</p>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">💬</span>
+                    <h3>WhatsApp</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Lista de chats con preview</li>
+                    <li>Burbujas de mensaje asimétricas</li>
+                    <li>Estados de lectura (✓✓)</li>
+                    <li>Input con attachments</li>
+                    <li>Drawer lateral para info</li>
+                    <li>Tema claro y limpio</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> Flexbox, border-radius, animations</p>
+            </div>
+
+            <!-- Zoom -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">📞</span>
+                    <h3>Zoom</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Grid de participantes adaptativos</li>
+                    <li>Controles flotantes inferiores</li>
+                    <li>Sidebar de chat integrado</li>
+                    <li>Overlays de información</li>
+                    <li>Iconos grandes y claros</li>
+                    <li>Estados visuales (mute, video)</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> CSS Grid, position absolute, z-index</p>
+            </div>
+
+            <!-- Google Drive -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">📁</span>
+                    <h3>Google Drive</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Vista de lista y grid</li>
+                    <li>Sidebar con navegación</li>
+                    <li>Breadcrumbs claros</li>
+                    <li>Drag & drop visual</li>
+                    <li>Context menus</li>
+                    <li>Colores por tipo de archivo</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> Material Design, transitions, cards</p>
+            </div>
+
+            <!-- Telegram -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">✈️</span>
+                    <h3>Telegram</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Animaciones suaves</li>
+                    <li>Stickers integrados perfectos</li>
+                    <li>Bots con keyboards inline</li>
+                    <li>Canales vs grupos claros</li>
+                    <li>Búsqueda universal potente</li>
+                    <li>Temas personalizables</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> CSS animations, custom properties</p>
+            </div>
+
+            <!-- ChatGPT -->
+            <div class="platform-card">
+                <div class="platform-header">
+                    <span class="platform-icon">🤖</span>
+                    <h3>ChatGPT</h3>
+                </div>
+                <p><strong>Fortalezas UI:</strong></p>
+                <ul class="feature-list">
+                    <li>Chat centrado y limpio</li>
+                    <li>Typing indicators animados</li>
+                    <li>Code syntax highlighting</li>
+                    <li>Copy buttons en respuestas</li>
+                    <li>Sidebar de conversaciones</li>
+                    <li>Regenerate/edit options</li>
+                </ul>
+                <p><strong>CSS Clave:</strong> Typography, code blocks, smooth scroll</p>
+            </div>
+        </div>
+
+        <!-- CSS Frameworks -->
+        <div class="css-framework">
+            <h3>🎨 CSS Frameworks Recomendados</h3>
+            <p><strong>Bulma CSS:</strong></p>
+            <ul>
+                <li>✅ <strong>Flexbox-based</strong> - Perfecto para layouts modernos</li>
+                <li>✅ <strong>Modular</strong> - Solo importar lo necesario</li>
+                <li>✅ <strong>Mobile-first</strong> - Responsive por defecto</li>
+                <li>✅ <strong>Componentes listos</strong> - Navbar, cards, modals</li>
+                <li>✅ <strong>Customizable</strong> - Variables SASS</li>
+            </ul>
+            <p><strong>Alternativas:</strong> Tailwind CSS (utility-first), Bootstrap 5 (familiar)</p>
+        </div>
+
+        <!-- Icon Resources -->
+        <div class="icon-resources">
+            <h3>🎭 Recursos de Iconos y Animaciones</h3>
+            
+            <h4>🔥 LordIcon (Animados):</h4>
+            <ul>
+                <li>🎯 <strong>lordicon.com</strong> - Iconos Lottie premium</li>
+                <li>📦 Formatos: JSON, GIF, SVG animado</li>
+                <li>⚡ Triggers: hover, click, loop</li>
+                <li>🎨 Customizable colors y speeds</li>
+            </ul>
+
+            <h4>🎪 IconScout:</h4>
+            <ul>
+                <li>🌟 <strong>iconscout.com</strong> - Mega librería</li>
+                <li>📊 3M+ iconos, ilustraciones, animaciones</li>
+                <li>🔄 Múltiples formatos (SVG, PNG, JSON)</li>
+                <li>🎨 Estilos: Line, solid, duotone</li>
+            </ul>
+
+            <h4>🆓 Alternativas Gratuitas:</h4>
+            <ul>
+                <li>🎪 <strong>Feather Icons</strong> - Simples y elegantes</li>
+                <li>⭐ <strong>Heroicons</strong> - Por Tailwind team</li>
+                <li>🔥 <strong>Lucide</strong> - Fork mejorado de Feather</li>
+                <li>🎨 <strong>Phosphor</strong> - Flexible icon family</li>
+            </ul>
+        </div>
+
+        <!-- Plan de Acción -->
+        <div style="background: rgba(255, 193, 7, 0.2); border-left: 4px solid #FFC107; padding: 15px; margin: 20px 0; border-radius: 0 10px 10px 0;">
+            <h3>🗓️ Plan de Acción Inmediato</h3>
+            <ol>
+                <li><strong>Decisión Framework:</strong> ¿Bulma, Tailwind o Custom CSS?</li>
+                <li><strong>Paleta de colores:</strong> Definir esquema unificado</li>
+                <li><strong>Componentes base:</strong> Cards, buttons, inputs</li>
+                <li><strong>Iconografía:</strong> Seleccionar librería principal</li>
+                <li><strong>Layout grid:</strong> Definir breakpoints responsive</li>
+                <li><strong>Animaciones:</strong> Micro-interactions clave</li>
+            </ol>
+        </div>
+
+        <!-- Próximos Pasos -->
+        <div style="background: rgba(156, 39, 176, 0.2); border-left: 4px solid #9C27B0; padding: 15px; margin: 20px 0; border-radius: 0 10px 10px 0;">
+            <h3>🚀 Próximos Desarrollos</h3>
+            <ul>
+                <li>📱 <strong>Multimedia:</strong> Upload, preview, galería</li>
+                <li>📞 <strong>WebRTC:</strong> Video/audio calls</li>
+                <li>📁 <strong>File System:</strong> Drag & drop, folders</li>
+                <li>🤖 <strong>Bots Avanzados:</strong> Commands, keyboards</li>
+                <li>🔍 <strong>Búsqueda:</strong> Global search across content</li>
+                <li>📡 <strong>Real-time:</strong> WebSockets integration</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

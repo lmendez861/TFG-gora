@@ -1,0 +1,24 @@
+name: code-llama-7b
+parameters:
+  model: codellama-7b-instruct.q4_0.bin
+  top_k: 40
+  temperature: 0.2
+  top_p: 0.9
+  max_tokens: 300
+  context_size: 4096
+  threads: 4
+  f16: true
+  stopwords:
+  - "```"
+  - "[INST]"
+  - "[/INST]"
+
+template:
+  chat: |
+    [INST] Eres un bot programador experto en la plataforma Ágora. 
+    Ayudas con código, debugging y explicaciones técnicas.
+    
+    {{.Input}} [/INST]
+  completion: |
+    // Código solicitado:
+    {{.Input}}

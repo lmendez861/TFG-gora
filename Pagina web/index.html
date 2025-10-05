@@ -163,7 +163,7 @@
             
             if (!token) {
                 console.log('❌ No hay sesión activa, redirigiendo a login...');
-                const loginUrl = 'iniciosesion.html?redirect=chats';
+                const loginUrl = 'iniciosesion.html?redirect=platform';
                 console.log('🔗 URL de login:', loginUrl);
                 window.location.href = loginUrl;
                 return;
@@ -176,21 +176,21 @@
                     const isValid = await AgoraAPI.verifyToken();
                     console.log('🔍 Token válido:', isValid);
                     if (isValid.valid) {
-                        console.log('✅ Sesión válida, accediendo a chats...');
-                        window.location.href = 'Chats.html';
+                        console.log('✅ Sesión válida, accediendo a plataforma principal...');
+                        window.location.href = 'agora-platform-demo.html';
                     } else {
                         console.log('❌ Token inválido, redirigiendo a login...');
                         localStorage.removeItem('agoraToken');
-                        window.location.href = 'iniciosesion.html?redirect=chats';
+                        window.location.href = 'iniciosesion.html?redirect=platform';
                     }
                 } else {
                     console.log('❌ AgoraAPI no disponible, redirigiendo a login...');
-                    window.location.href = 'iniciosesion.html?redirect=chats';
+                    window.location.href = 'iniciosesion.html?redirect=platform';
                 }
             } catch (error) {
                 console.error('💥 Error verificando sesión:', error);
                 localStorage.removeItem('agoraToken');
-                window.location.href = 'iniciosesion.html?redirect=chats';
+                window.location.href = 'iniciosesion.html?redirect=platform';
             }
         }
         

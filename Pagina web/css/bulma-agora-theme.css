@@ -1,0 +1,272 @@
+/* ===== BULMA CSS INTEGRATION PLAN ===== */
+
+/*
+BULMA CSS - Por qué es ideal para Ágora:
+
+✅ VENTAJAS:
+1. Flexbox-based - Layout moderno y flexible
+2. Mobile-first - Responsive automático
+3. Modular - Solo importar lo necesario
+4. Sin JavaScript - Puro CSS
+5. Customizable - Variables SASS
+6. Componentes ricos - Navbar, cards, modals, etc.
+
+📦 INSTALACIÓN:
+- CDN: https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css
+- NPM: npm install bulma
+- Sass: Personalización completa
+
+🎨 COMPONENTES CLAVE PARA ÁGORA:
+- navbar: Navegación principal estilo Discord
+- columns: Layout en 3 columnas (servers/channels/chat)
+- card: Tarjetas para mensajes y archivos
+- modal: Overlays para configuración
+- button: Botones modernos con estados
+- input: Campos de texto estilizados
+- notification: Alertas y notificaciones
+- tabs: Pestañas para diferentes vistas
+- panel: Sidebars colapsables
+*/
+
+/* ===== CUSTOM BULMA VARIABLES ===== */
+:root {
+  /* Ágora Brand Colors */
+  --agora-primary: #667eea;
+  --agora-secondary: #764ba2;
+  --agora-success: #48c78e;
+  --agora-warning: #ffe08a;
+  --agora-danger: #f14668;
+  
+  /* Discord-inspired Dark Theme */
+  --discord-dark: #2c2f33;
+  --discord-darker: #23272a;
+  --discord-light: #99aab5;
+  --discord-blurple: #5865f2;
+  
+  /* WhatsApp-inspired Colors */
+  --whatsapp-green: #25d366;
+  --whatsapp-teal: #075e54;
+  --whatsapp-light: #dcf8c6;
+  
+  /* Zoom-inspired Blues */
+  --zoom-blue: #2d8cff;
+  --zoom-dark: #1f1f1f;
+  
+  /* ChatGPT-inspired Grays */
+  --chatgpt-bg: #343541;
+  --chatgpt-lighter: #40414f;
+  --chatgpt-green: #19c37d;
+}
+
+/* ===== BULMA CUSTOMIZATION OVERRIDES ===== */
+
+/* Navbar personalizada estilo Discord */
+.navbar.is-agora-dark {
+  background-color: var(--discord-darker);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.is-agora-dark .navbar-item {
+  color: var(--discord-light);
+  transition: color 0.2s ease;
+}
+
+.navbar.is-agora-dark .navbar-item:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Cards estilo material moderno */
+.card.is-agora {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card.is-agora:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Buttons con gradientes */
+.button.is-agora-primary {
+  background: linear-gradient(135deg, var(--agora-primary) 0%, var(--agora-secondary) 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.button.is-agora-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Input fields modernos */
+.input.is-agora, .textarea.is-agora {
+  border-radius: 8px;
+  border: 2px solid #e1e5e9;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input.is-agora:focus, .textarea.is-agora:focus {
+  border-color: var(--agora-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Modal estilo moderno */
+.modal.is-agora .modal-card {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.modal.is-agora .modal-card-head {
+  background: linear-gradient(135deg, var(--agora-primary) 0%, var(--agora-secondary) 100%);
+  color: white;
+  border-bottom: none;
+}
+
+/* Notifications con iconos animados */
+.notification.is-agora {
+  border-radius: 10px;
+  border-left: 4px solid var(--agora-primary);
+}
+
+/* Tabs estilo Discord */
+.tabs.is-agora ul {
+  border-bottom: 2px solid #e1e5e9;
+}
+
+.tabs.is-agora li.is-active a {
+  border-bottom: 2px solid var(--agora-primary);
+  color: var(--agora-primary);
+}
+
+/* Panel sidebar */
+.panel.is-agora {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.panel.is-agora .panel-heading {
+  background: linear-gradient(135deg, var(--agora-primary) 0%, var(--agora-secondary) 100%);
+  color: white;
+  border-radius: 8px 8px 0 0;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+/* Bulma default breakpoints:
+- Mobile: up to 768px
+- Tablet: 769px to 1023px  
+- Desktop: 1024px to 1215px
+- Widescreen: 1216px to 1407px
+- Fullhd: 1408px and up
+*/
+
+/* Mobile optimizations */
+@media screen and (max-width: 768px) {
+  .is-hidden-mobile-agora {
+    display: none !important;
+  }
+  
+  .columns.is-mobile-stacked > .column {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Tablet optimizations */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+  .is-hidden-tablet-agora {
+    display: none !important;
+  }
+}
+
+/* Desktop optimizations */
+@media screen and (min-width: 1024px) {
+  .is-hidden-desktop-agora {
+    display: none !important;
+  }
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% { 
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-strong {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.rounded-soft {
+  border-radius: 8px;
+}
+
+.rounded-medium {
+  border-radius: 12px;
+}
+
+.rounded-strong {
+  border-radius: 16px;
+}
+
+.gradient-agora {
+  background: linear-gradient(135deg, var(--agora-primary) 0%, var(--agora-secondary) 100%);
+}
+
+.gradient-discord {
+  background: linear-gradient(135deg, var(--discord-blurple) 0%, var(--discord-dark) 100%);
+}
+
+.gradient-whatsapp {
+  background: linear-gradient(135deg, var(--whatsapp-green) 0%, var(--whatsapp-teal) 100%);
+}
