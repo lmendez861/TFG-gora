@@ -24,3 +24,22 @@ curl http://localhost:8080/health
 Notas:
 - El directorio `localai-models/` está montado en el workspace para que puedas subir modelos y configuraciones.
 - Ajusta `THREADS` en `.devcontainer/docker-compose.yml` según la capacidad del Codespace.
+
+Scripts de ayuda incluidos
+-------------------------
+En `.devcontainer/scripts/` encontrarás dos scripts que facilitan comprobar y arrancar LocalAI dentro del Codespace:
+
+- `check-localai.sh` — script Bash. Uso:
+	```bash
+	# desde el Codespace
+	bash .devcontainer/scripts/check-localai.sh
+	```
+
+- `check-localai.ps1` — script PowerShell. Uso:
+	```powershell
+	# desde el Codespace PowerShell
+	.devcontainer\scripts\check-localai.ps1
+	```
+
+Ambos scripts intentan arrancar el servicio `localai` (vía `docker compose up -d localai`), muestran el estado del contenedor, los últimos logs y prueban el endpoint `http://localhost:8080/health`.
+
