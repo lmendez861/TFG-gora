@@ -1,0 +1,10 @@
+{
+  "name": "Agora Codespace",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8080],
+  "postCreateCommand": "echo 'Codespace preparado: inicia LocalAI se no está levantado'",
+  "remoteUser": "vscode"
+}
